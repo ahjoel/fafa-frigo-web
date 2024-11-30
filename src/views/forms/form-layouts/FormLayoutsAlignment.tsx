@@ -53,7 +53,7 @@ const FormLayoutsAlignment = () => {
     <Card>
       <CardHeader title='Form Alignment' />
       <CardContent sx={{ minHeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Form onSubmit={e => e.preventDefault()}>
+        <Form onSubmit={(e:any) => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant='h5'>Sign In</Typography>

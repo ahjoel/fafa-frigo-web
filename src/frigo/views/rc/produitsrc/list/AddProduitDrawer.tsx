@@ -198,9 +198,6 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
     reset({
       code: currentProduit !== null ? currentProduit?.code : '',
       name: currentProduit !== null ? currentProduit?.name : '',
-      description: currentProduit !== null ? currentProduit?.description : '',
-      modelId: currentProduit && currentProduit?.modelId !== undefined ? currentProduit.modelId : 0,
-      fournisseurId: currentProduit && currentProduit?.fournisseurId !== undefined ? currentProduit.fournisseurId : 0,
       pv: currentProduit && currentProduit?.pv !== undefined ? currentProduit.pv : 0,
       stock_min: currentProduit && currentProduit?.stock_min !== undefined ? currentProduit.stock_min : 0
     })

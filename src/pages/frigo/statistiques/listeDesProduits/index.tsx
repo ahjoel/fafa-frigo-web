@@ -128,126 +128,6 @@ const ListeDesProduits = () => {
         }
       },
       {
-        flex: 0.2,
-        minWidth: 200,
-        field: 'description',
-        renderHeader: () => (
-          <Tooltip title='Description'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Description
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { description } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {description}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        minWidth: 200,
-        field: 'model',
-        renderHeader: () => (
-          <Tooltip title='Model'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Model
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { model } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {model.toString()}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        minWidth: 200,
-        field: 'fournisseur',
-        renderHeader: () => (
-          <Tooltip title='Fournisseur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Fournisseur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { fournisseur } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {fournisseur.toString()}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
         flex: 0.15,
         minWidth: 200,
         field: 'pv',
@@ -334,7 +214,7 @@ const ListeDesProduits = () => {
 
   // Axios call to loading Data
   const getListProduits = async (page: number, pageSize: number) => {
-    const result = await produitService.listProduits({ page: page + 1, length: pageSize })
+    const result = await produitService.listProduits()
 
     if (result.success) {
       setProduits(result.data as Produit[])

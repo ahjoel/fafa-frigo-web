@@ -17,8 +17,6 @@ const TemplateListeDesProduits: React.FC<PdfDocumentProps> = ({ data, fileName }
       [
         { text: 'Code', style: 'tableHeader' },
         { text: 'Nom', style: 'tableHeader' },
-        { text: 'Description', style: 'tableHeader' },
-        { text: 'Model', style: 'tableHeader' },
         { text: 'Fournisseur', style: 'tableHeader' },
         { text: 'Prix de Vente', style: 'tableHeader' },
         { text: 'Stock Minimal', style: 'tableHeader' }
@@ -26,8 +24,6 @@ const TemplateListeDesProduits: React.FC<PdfDocumentProps> = ({ data, fileName }
       ...data.map(row => [
         row.code,
         row.name,
-        { text: row.description, color: 'red' },
-        row.model,
         row.fournisseur,
         { text: row.pv.toString(), alignment: 'right', color: 'red' },
         { text: row.stock_min.toString(), alignment: 'right', color: 'red' }

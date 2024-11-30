@@ -202,84 +202,6 @@ const ProduitList = () => {
         }
       },
       {
-        flex: 0.2,
-        field: 'description',
-        renderHeader: () => (
-          <Tooltip title='Description'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Description
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { description } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {description}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        field: 'model',
-        renderHeader: () => (
-          <Tooltip title='Model'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Model
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { model } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {model.toString()}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
         flex: 0.15,
         field: 'fournisseur',
         renderHeader: () => (
@@ -397,45 +319,6 @@ const ProduitList = () => {
         }
       },
       {
-        flex: 0.15,
-        field: 'stock',
-        renderHeader: () => (
-          <Tooltip title='Stock'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Stock
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { stock } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {stock}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
         flex: 0.1,
         sortable: false,
         field: 'actions',
@@ -501,10 +384,6 @@ const ProduitList = () => {
         return (
           produit.code.toLowerCase().includes(queryLowered) ||
           produit.name.toLowerCase().includes(queryLowered) ||
-          produit.description.toLowerCase().includes(queryLowered) ||
-          produit.stock.toLowerCase().includes(queryLowered) ||
-          (produit.model && produit.model.toString().toLowerCase().includes(queryLowered)) ||
-          (produit.fournisseur && produit.fournisseur.toString().toLowerCase().includes(queryLowered)) ||
           produit.pv.toString().toLowerCase().includes(queryLowered) ||
           produit.stock_min.toString().toLowerCase().includes(queryLowered)
         )

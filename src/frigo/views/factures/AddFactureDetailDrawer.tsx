@@ -232,7 +232,7 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
                 fullWidth
                 sx={{ mb: 6 }}
                 options={products} // Remplacez products par votre tableau de produits
-                getOptionLabel={product => `${product.name} ${product.model}`} // Fonction pour afficher le nom du produit dans l'autocomplete
+                getOptionLabel={product => `${product.name}`} // Fonction pour afficher le nom du produit dans l'autocomplete
                 value={products.find(product => product.id === value) || null} // Sélectionnez le produit correspondant à la valeur
                 onChange={(e, newValue) => onChange(newValue ? newValue.id : 0)} // Met à jour la valeur avec l'id du produit sélectionné
                 renderInput={params => (
