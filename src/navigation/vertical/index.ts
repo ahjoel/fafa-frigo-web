@@ -37,7 +37,7 @@ const navigation = (): VerticalNavItemsType => {
     children: [
       {
         title: `Stock Entree`,
-        path: "/frigo/entreeR1/list",
+        path: "/frigo/entree/list",
       },
       {
         title: `Stock Disponible`,

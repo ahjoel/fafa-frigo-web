@@ -941,8 +941,6 @@ export default class MainService {
         }
       })
 
-      // console.log(`${this.url}/all`);
-
       if (response.data.status === 200) {
         result.success = true
         result.code = response.data.status
@@ -1143,7 +1141,7 @@ export default class MainService {
     return result
   }
 
-  async listProduitsLongue(object: any = { page: 1, length: 100000 }) {
+  async listProduitsLongue() {
     const result = {
       success: false,
       code: -1,
@@ -1154,19 +1152,16 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all`, {
         headers: {
           ...getHeadersInformation()
         }
       })
 
-      // console.log(`${this.url}/all`);
-
       if (response.data.status === 200) {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.produits
-        result.total = response.data.data.produitNumber
       } else {
         result.description = response.data.description
       }
@@ -1433,7 +1428,7 @@ export default class MainService {
     return result
   }
 
-  async listEntreesR1(object: any = { page: 1, length: 10 }) {
+  async listEntrees() {
     const result = {
       success: false,
       code: -1,
@@ -1444,19 +1439,16 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all`, {
         headers: {
           ...getHeadersInformation()
         }
       })
 
-      // console.log(`${this.url}/all`);
-
       if (response.data.status === 200) {
         result.success = true
         result.code = response.data.status
-        result.data = response.data.data.mouvementsEntreeR1
-        result.total = response.data.data.mouvementsEntreeR1Number
+        result.data = response.data.data.mouvementsEntree
       } else {
         result.description = response.data.description
       }

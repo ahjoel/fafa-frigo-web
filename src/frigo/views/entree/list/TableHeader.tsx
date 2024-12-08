@@ -9,11 +9,12 @@ interface TableHeaderProps {
   toggle: () => void
   onReload: () => void
   handleFilter: (val: string) => void
+  handleKeyPress: (e: React.KeyboardEvent) => void
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilter, toggle, value, onReload } = props
+  const { handleFilter, toggle, value, onReload, handleKeyPress } = props
 
   return (
     <Box
@@ -34,18 +35,20 @@ const TableHeader = (props: TableHeaderProps) => {
         color='primary'
         type='text'
         value={value}
-        onChange={e => handleFilter(e.target.value)}
+        // onChange={e => handleFilter(e.target.value)}
+        onChange={(e) => handleFilter(e.target.value)} // Mise à jour de la valeur
+        onKeyPress={handleKeyPress} // Ajout de l'événement pour la touche "Entrer"
         sx={{ mr: 4 }}
       />
 
       <Box sx={{ display: 'flex', alignItems: 'right' }}>
-        <Button onClick={toggle} variant='contained' sx={{ height: '38px' }}>
+        <Button onClick={toggle} size='small' variant='contained' sx={{ height: '38px', '&:hover': { backgroundColor: '#2a3645' } }}>
           <span style={{ marginRight: '0.1rem' }}>Ajouter un stock</span>
           <Icon fontSize='1.5rem' icon='tabler:plus' />
         </Button>
 
         <Button
-          sx={{ marginLeft: '5px' }}
+          sx={{ marginLeft: '5px', '&:hover': { backgroundColor: '#2a3645' } }}
           size='small'
           variant='contained'
           onClick={() => {

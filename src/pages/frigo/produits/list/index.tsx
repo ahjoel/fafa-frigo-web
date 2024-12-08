@@ -122,7 +122,7 @@ const ProduitList = () => {
   const getColumns = (handleUpdateProduit: (produit: Produit) => void) => {
     const colArray: ColumnType[] = [
       {
-        width: 200,
+        width: 100,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -160,7 +160,7 @@ const ProduitList = () => {
         }
       },
       {
-        width: 400,
+        width: 300,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>

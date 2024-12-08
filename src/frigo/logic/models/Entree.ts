@@ -1,12 +1,14 @@
+import Fournisseur from './Fournisseur'
 import MainModel from './MainModel'
 import Produit from './Produit'
 
-export default class EntreeR1 extends MainModel {
+export default class Entree extends MainModel {
   code: string
   produit: Produit | string
   produitId: number
   model: string
-  fournisseur: string
+  fournisseur: Fournisseur | string
+  fournisseurId: number
   stock: string
   qte: number
 
@@ -22,7 +24,8 @@ export default class EntreeR1 extends MainModel {
     produit = new Produit(),
     produitId = 0,
     model = '',
-    fournisseur = '',
+    fournisseur = new Fournisseur(),
+    fournisseurId = 0,
     stock = '',
     qte = 0
   ) {
@@ -33,6 +36,7 @@ export default class EntreeR1 extends MainModel {
     this.produitId = produitId
     this.model = model
     this.fournisseur = fournisseur
+    this.fournisseurId = fournisseurId
     this.stock = stock
     this.qte = qte
   }

@@ -7,94 +7,38 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
-import TableHeader from 'src/frigo/views/rc/entreerc/list/TableHeader'
-import AddEntreeRCDrawer from 'src/frigo/views/rc/entreerc/list/AddEntreeRCDrawer'
-import { t } from 'i18next'
-import Produit from 'src/frigo/logic/models/Produit'
-import ProduitService from 'src/frigo/logic/services/ProduitService'
-import EntreeRCService from 'src/frigo/logic/services/EntreeRCService'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
-import EntreeRC from 'src/frigo/logic/models/EntreeRC'
+import TableHeader from 'src/frigo/views/entreeR1Dispo/list/TableHeader'
+import EntreeR1Service from 'src/frigo/logic/services/EntreeService'
+import EntreeR1Dispo from 'src/frigo/logic/models/EntreeR1Dispo'
 
 interface CellType {
-  row: EntreeRC
+  row: EntreeR1Dispo
 }
 
 interface ColumnType {
   [key: string]: any
 }
 
-const EntreeRCList = () => {
-  const produitService = new ProduitService()
-  const entreeRCService = new EntreeRCService()
-  const produitId = 0
-
-  // Delete Confirmation - State
-  const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
-  const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
-  const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
-
-  const handleDeleteEntreeRC = (entreeRC: EntreeRC) => {
-    setCurrentEntreeRC(entreeRC)
-    setComfirmationMessage('Voulez-vous réellement supprimer ce produit du stock ?')
-    setComfirmationFunction(() => () => deleteEntreeRC(entreeRC))
-    setOpen(true)
-  }
-
-  const deleteEntreeRC = async (entreeRC: EntreeRC) => {
-    setSendDelete(true)
-
-    try {
-      const rep = await entreeRCService.delete(entreeRC.id)
-
-      if (rep === null) {
-        setSendDelete(false)
-        handleChange()
-        handleClose()
-        setOpenNotification(true)
-        setTypeMessage('success')
-        setMessage('Produit du stock supprimé avec succes')
-      } else {
-        setSendDelete(false)
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage('Produit du stock non trouvé')
-      }
-    } catch (error) {
-      console.error('Erreur lors de la suppression :', error)
-      setSendDelete(false)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
-    }
-  }
+const EntreeR1List = () => {
+  const entreeR1Service = new EntreeR1Service()
 
   // Search State
-  const [valuerc, setValuerc] = useState<string>('')
+  const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
   const [message, setMessage] = useState('')
 
-  const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true)
-    setTypeMessage(type)
-    const messageTrans = t(message)
-    setMessage(messageTrans)
-  }
+  // const handleSuccess = (message: string, type = 'success') => {
+  //   setOpenNotification(true);
+  //   setTypeMessage(type);
+  //   const messageTrans = t(message)
+  //   setMessage(messageTrans)
+  // };
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -104,98 +48,17 @@ const EntreeRCList = () => {
   }
 
   // Loading Agencies Data, Datagrid and pagination - State
-  const [statusEntreeRC, setStatusEntreeRC] = useState<boolean>(true)
-  const [entreesRC, setEntreesRC] = useState<EntreeRC[]>([])
+  const [statusEntreeR1, setStatusEntreeR1] = useState<boolean>(true)
+  const [entreesR1Dispo, setEntreesR1Dispo] = useState<EntreeR1Dispo[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
-  const [addEntreeRCOpen, setAddEntreeRCOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const [total, setTotal] = useState(40)
-  const [currentEntreeRC, setCurrentEntreeRC] = useState<null | EntreeRC>(null)
-
-  const [produits, setProduits] = useState<Produit[]>([])
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleUpdateEntreeRC: (entreeRC: EntreeRC) => void) => {
+  const getColumns = (handleAddToCart: (entreeR1Dispo: EntreeR1Dispo) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
-        field: 'code',
-        renderHeader: () => (
-          <Tooltip title='Code'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Code
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { code } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none'
-                  }}
-                >
-                  {code}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
         flex: 0.25,
-        field: 'createdAt',
-        renderHeader: () => (
-          <Tooltip title='Date creation'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Date creation
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { createdAt } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {createdAt.slice(0, -5).replace(/T/g, ' ')}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.2,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -234,7 +97,7 @@ const EntreeRCList = () => {
         }
       },
       {
-        flex: 0.2,
+        flex: 0.18,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
@@ -273,7 +136,7 @@ const EntreeRCList = () => {
         }
       },
       {
-        flex: 0.2,
+        flex: 0.18,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -312,10 +175,10 @@ const EntreeRCList = () => {
         }
       },
       {
-        flex: 0.15,
-        field: 'qte',
+        flex: 0.18,
+        field: 'pv',
         renderHeader: () => (
-          <Tooltip title='Quantité'>
+          <Tooltip title='Prix de vente'>
             <Typography
               noWrap
               sx={{
@@ -325,12 +188,51 @@ const EntreeRCList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Quantité
+              Prix de vente
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { qte } = row
+          const { pv } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {pv}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        flex: 0.18,
+        field: 'st_dispo',
+        renderHeader: () => (
+          <Tooltip title='Quantité Disponible'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Quantité Disponible
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { st_dispo } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -343,7 +245,7 @@ const EntreeRCList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {qte}
+                  {st_dispo}
                 </Typography>
               </Box>
             </Box>
@@ -351,8 +253,8 @@ const EntreeRCList = () => {
         }
       },
       {
-        flex: 0.1,
-        field: 'stock',
+        flex: 0.15,
+        field: 'stockMinimal',
         renderHeader: () => (
           <Tooltip title='Stock'>
             <Typography
@@ -364,12 +266,12 @@ const EntreeRCList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Stock
+              Stock Minimal
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { stock } = row
+          const { stockMinimal } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -382,7 +284,7 @@ const EntreeRCList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {stock.toString()}
+                  {stockMinimal.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -390,11 +292,11 @@ const EntreeRCList = () => {
         }
       },
       {
-        flex: 0.15,
+        flex: 0.2,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
-          <Tooltip title={t('Actions')}>
+          <Tooltip title='Actions'>
             <Typography
               noWrap
               sx={{
@@ -404,36 +306,22 @@ const EntreeRCList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              {t('Actions')}
+              Action
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Mettre à jour un produit du stock'>
+            <Tooltip title='Créer une facture avec ce produit du stock'>
               <IconButton
                 size='small'
-                sx={{ color: 'text.primary' }}
+                sx={{ color: 'text.primary', ':hover': 'none' }}
                 onClick={() => {
-                  handleUpdateEntreeRC(row)
+                  handleAddToCart(row)
                 }}
               >
                 <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-                  <Icon icon='tabler:edit' />
-                </Box>
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title='Supprimer'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleDeleteEntreeRC(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-                  <Icon icon='tabler:trash' />
+                  <Icon icon='tabler:plus' />
                 </Box>
               </IconButton>
             </Tooltip>
@@ -446,26 +334,24 @@ const EntreeRCList = () => {
   }
 
   // Axios call to loading Data
-  const getListEntreesRC = async (page: number, pageSize: number) => {
-    const result = await entreeRCService.listEntreesRC({ page: page + 1, length: pageSize })
+  const getListEntreesR1Dispo = async (page: number, pageSize: number) => {
+    const result = await entreeR1Service.listEntreesR1Dispo({ page: page + 1, length: pageSize })
 
     if (result.success) {
-      const queryLowered = valuerc.toLowerCase()
+      const queryLowered = value.toLowerCase()
 
-      const filteredData = (result.data as EntreeRC[]).filter(entree => {
+      const filteredData = (result.data as EntreeR1Dispo[]).filter(entree => {
         return (
-          entree.code.toString().toLowerCase().includes(queryLowered) ||
-          entree.createdAt.toString().toLowerCase().includes(queryLowered) ||
           (entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered)) ||
           entree.model.toString().toLowerCase().includes(queryLowered) ||
           entree.fournisseur.toLowerCase().includes(queryLowered) ||
-          entree.qte.toString().toLowerCase().includes(queryLowered) ||
-          entree.stock.toString().toLowerCase().includes(queryLowered)
+          entree.st_dispo.toString().toLowerCase().includes(queryLowered) ||
+          entree.pv.toString().toLowerCase().includes(queryLowered) ||
+          entree.stockMinimal.toString().toLowerCase().includes(queryLowered)
         )
       })
-
-      setEntreesRC(filteredData)
-      setStatusEntreeRC(false)
+      setEntreesR1Dispo(filteredData)
+      setStatusEntreeR1(false)
       setTotal(Number(result.total))
     } else {
       setOpenNotification(true)
@@ -474,51 +360,69 @@ const EntreeRCList = () => {
     }
   }
 
-  const handleLoadingProduits = async () => {
-    const result = await produitService.listProduitsRcLongue()
-
-    if (result.success) {
-      setProduits(result.data as Produit[])
-    } else {
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage(result.description)
-    }
-  }
-
   const handleChange = async () => {
-    getListEntreesRC(0, 10)
+    getListEntreesR1Dispo(0, 10)
   }
 
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
-    handleLoadingProduits()
-    setColumns(getColumns(handleUpdateEntreeRC))
-  }, [valuerc])
+    setColumns(getColumns(handleAddToCart))
+  }, [value])
 
   const handleFilter = useCallback((val: string) => {
-    setValuerc(val)
+    setValue(val)
   }, [])
 
-  // Show Modal
-  const toggleAddEntreeRCDrawer = () => setAddEntreeRCOpen(!addEntreeRCOpen)
+  const handleAddToCart = (entreeR1Dispo: EntreeR1Dispo) => {
+    // console.log('data to save :::', entreeR1Dispo);
+    const stockMinimal = Number(entreeR1Dispo.stockMinimal)
+    const stockDispo = Number(entreeR1Dispo.st_dispo)
 
-  // Add Data
-  const handleCreateEntreeRC = () => {
-    setCurrentEntreeRC(null)
-    toggleAddEntreeRCDrawer()
-  }
+    if (stockDispo >= stockMinimal) {
+      const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
 
-  // Update Data
-  const handleUpdateEntreeRC = (entreeRC: EntreeRC) => {
-    setCurrentEntreeRC(entreeRC)
-    toggleAddEntreeRCDrawer()
+      // Créer un nouvel objet pour le produit à ajouter au panier
+      const productToCart = {
+        productId: entreeR1Dispo.id,
+        product: entreeR1Dispo.produit.toString(),
+        model: entreeR1Dispo.model,
+        fournisseur: entreeR1Dispo.fournisseur,
+        pv: Number(entreeR1Dispo.pv),
+        stockDispo: Number(entreeR1Dispo.st_dispo),
+        quantity: 1
+      }
+
+      // Vérifier si le produit existe déjà dans le panier
+      const existingProductIndex = cartProductArray.findIndex(
+        (item: { productId: number }) => item.productId === productToCart.productId
+      )
+
+      // Si le produit existe déjà dans le panier, ne l'ajoute pas à nouveau
+      if (existingProductIndex === -1) {
+        // Ajouter le nouveau produit au panier
+        cartProductArray.push(productToCart)
+
+        // Mettre à jour le localStorage avec le nouveau panier
+        localStorage.setItem('cart1', JSON.stringify(cartProductArray))
+        setOpenNotification(true)
+        setTypeMessage('success')
+        setMessage('Produit ajouté à la facture en cours')
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage('Produit existe déja sur la facture en cours')
+      }
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Le stock disponible est insuffisant pour créer une facture')
+    }
   }
 
   // Pagination
   useEffect(() => {
-    getListEntreesRC(paginationModel.page, paginationModel.pageSize)
+    getListEntreesR1Dispo(paginationModel.page, paginationModel.pageSize)
   }, [paginationModel])
 
   return (
@@ -526,20 +430,19 @@ const EntreeRCList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader
-            value={valuerc}
+            value={value}
             handleFilter={handleFilter}
-            toggle={handleCreateEntreeRC}
             onReload={() => {
-              setValuerc('')
+              setValue('')
               handleChange()
             }}
           />
 
           <DataGrid
             autoHeight
-            loading={statusEntreeRC}
+            loading={statusEntreeR1}
             rowHeight={62}
-            rows={entreesRC as never[]}
+            rows={entreesR1Dispo as never[]}
             columns={columns as GridColDef<never>[]}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
@@ -552,17 +455,6 @@ const EntreeRCList = () => {
         </Card>
       </Grid>
 
-      {/* Add or Update Right Modal */}
-      <AddEntreeRCDrawer
-        open={addEntreeRCOpen}
-        toggle={toggleAddEntreeRCDrawer}
-        onChange={handleChange}
-        currentEntreeRC={currentEntreeRC}
-        onSuccess={handleSuccess}
-        produits={produits}
-        produitId={produitId}
-      />
-
       {/* Notification */}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -574,47 +466,13 @@ const EntreeRCList = () => {
           onClose={handleCloseNotification}
           severity={typeMessage as AlertColor}
           variant='filled'
-          sx={{ width: 'C00%' }}
+          sx={{ width: '100%' }}
         >
           {message}
         </Alert>
       </Snackbar>
-
-      {/* Delete Modal Confirmation */}
-      <Dialog
-        open={open}
-        disableEscapeKeyDown
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-        onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
-            handleClose()
-          }
-        }}
-      >
-        <DialogTitle id='alert-dialog-title'>{t('Confirmation')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>{t(comfirmationMessage)}</DialogContentText>
-        </DialogContent>
-        <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose} color='secondary'>
-            {t('Cancel')}
-          </Button>
-          <LoadingButton
-            onClick={() => {
-              comfirmationFunction()
-            }}
-            loading={sendDelete}
-            endIcon={<DeleteIcon />}
-            variant='contained'
-            color='error'
-          >
-            {t('Supprimer')}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
     </Grid>
   )
 }
 
-export default EntreeRCList
+export default EntreeR1List

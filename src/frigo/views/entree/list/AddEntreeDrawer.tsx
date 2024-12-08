@@ -12,37 +12,34 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import Icon from 'src/@core/components/icon'
 import { t } from 'i18next'
-import ProduitService from 'src/frigo/logic/services/ProduitService'
+import EntreeR1Service from 'src/frigo/logic/services/EntreeService'
 import { useEffect, useState } from 'react'
 import { LoadingButton } from '@mui/lab'
 import SaveIcon from '@mui/icons-material/Save'
 import { MenuItem, TextField } from '@mui/material'
-import Produit from 'src/frigo/logic/models/Produit'
+import Entree from 'src/frigo/logic/models/Entree'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import Model from 'src/frigo/logic/models/Model'
+import Produit from 'src/frigo/logic/models/Produit'
 import Fournisseur from 'src/frigo/logic/models/Fournisseur'
 
-interface ProduitData {
+interface EntreeData {
   id?: number
   code: string
-  name: string
-  description: string
-  modelId: number
+  produitId: number
   fournisseurId: number
-  pv: number
-  stock_min: number
+  qte: number
 }
 
-interface SidebarAddProduitType {
+interface SidebarAddEntreeR1Type {
   open: boolean
   toggle: () => void
   onChange: () => void
   onSuccess: (data: any) => void
-  currentProduit: null | Produit
-  models: Model[]
-  modelId: number
-  fournisseurs: Fournisseur[]
+  currentEntree: null | Entree
+  produits: Produit[]
+  produitId: number
   fournisseurId: number
+  fournisseurs: Fournisseur[]
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -53,61 +50,22 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  code: yup
-    .string()
-    .min(3, obj => {
-      if (obj.value.length === 0) {
-        return 'Le champ code est obligatoire'
-      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return 'Le champ code doit comporter au moins 3 caractères'
-      } else {
-        return ''
-      }
-    })
-    .required(),
-  name: yup
-    .string()
-    .min(3, obj => {
-      if (obj.value.length === 0) {
-        return 'Le champ nom est obligatoire'
-      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return 'Le champ nom doit comporter au moins 3 caractères'
-      } else {
-        return ''
-      }
-    })
-    .required(),
-  description: yup
-    .string()
-    .min(3, obj => {
-      if (obj.value.length === 0) {
-        return 'Le champ description est obligatoire'
-      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return 'Description invalide'
-      } else {
-        return ''
-      }
-    })
-    .required(),
-  modelId: yup.number().required(() => 'Le champ model est obligatoire'),
-  fournisseurId: yup.number().required(() => 'Le champ fournisseur est obligatoire'),
-  pv: yup.number().required(() => 'Le champ prix de vente est obligatoire'),
-  stock_min: yup.number().required(() => 'Le champ stock minimal est obligatoire')
+  code: yup.string().required(() => 'Le champ code est obligatoire'),
+  produitId: yup.number().positive().required(() => 'Le champ produit est obligatoire').notOneOf([0], 'Le champ produit est obligatoire'),
+  fournisseurId: yup.number().positive().required(() => 'Le champ fournisseur est obligatoire').notOneOf([0], 'Le champ fournisseur est obligatoire'),
+  qte: yup.number().required(() => 'Le champ quantité est obligatoire')
 })
 
 const defaultValues = {
   code: '',
-  name: '',
-  description: '',
-  modelId: 0,
-  fournisseurId: 0,
-  pv: 0,
-  stock_min: 0
+  produitId: -1,
+  fournisseurId: -1,
+  qte: 0
 }
 
-const SidebarAddProduit = (props: SidebarAddProduitType) => {
+const SidebarAddEntree = (props: SidebarAddEntreeR1Type) => {
   // ** Props
-  const { open, toggle, onChange, onSuccess, currentProduit, models, fournisseurs } = props
+  const { open, toggle, onChange, onSuccess, currentEntree, fournisseurs, produits } = props
 
   const [send, setSend] = useState<boolean>(false)
   let infoTranslate
@@ -133,22 +91,20 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
     formState: { errors }
   } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
 
-  const onSubmit = async (data: ProduitData) => {
-    const produitService = new ProduitService()
+  const onSubmit = async (data: EntreeData) => {
+    const entreeR1Service = new EntreeR1Service()
     setSend(true)
 
     const sendData = {
       code: data.code,
-      name: data.name,
-      description: data.description,
-      modelId: Number(data.modelId),
+      produitId: Number(data.produitId),
       fournisseurId: Number(data.fournisseurId),
-      pv: Number(data.pv),
-      stock_min: Number(data.stock_min)
+      types: 'ADD',
+      qte: Number(data.qte),
     }
 
     if (id === -1) {
-      const result = await produitService.createProduitRc(sendData)
+      const result = await entreeR1Service.createEntreeR1(sendData)
       setSend(false)
 
       if (result.success) {
@@ -162,8 +118,8 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
         setMessage(result.description)
       }
     } else {
-      produitService
-        .updateProduit({ ...sendData, id }, id)
+      entreeR1Service
+        .updateEntreeR1({ ...sendData, id }, id)
         .then(rep => {
           setSend(false)
           if (rep) {
@@ -196,13 +152,13 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
 
   useEffect(() => {
     reset({
-      code: currentProduit !== null ? currentProduit?.code : '',
-      name: currentProduit !== null ? currentProduit?.name : '',
-      pv: currentProduit && currentProduit?.pv !== undefined ? currentProduit.pv : 0,
-      stock_min: currentProduit && currentProduit?.stock_min !== undefined ? currentProduit.stock_min : 0
+      code: currentEntree !== null ? currentEntree?.code : '',
+      produitId: currentEntree && currentEntree?.produitId !== undefined ? currentEntree.produitId : 0,
+      fournisseurId: currentEntree && currentEntree?.fournisseurId !== undefined ? currentEntree.fournisseurId : 0,
+      qte: currentEntree && currentEntree?.qte !== undefined ? currentEntree.qte : 0
     })
-    setId(currentProduit !== null ? currentProduit?.id : -1)
-  }, [open, currentProduit])
+    setId(currentEntree !== null ? currentEntree?.id : -1)
+  }, [open, currentEntree])
 
   return (
     <Drawer
@@ -214,7 +170,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant='h6'>{id === -1 ? 'Ajout de produit' : 'Modification de produit'}</Typography>
+        <Typography variant='h6'>{id === -1 ? 'Ajout de stock' : 'Modification de stock'}</Typography>
         <IconButton
           size='small'
           onClick={handleClose}
@@ -241,7 +197,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
               <TextField
                 fullWidth
                 value={value}
-                sx={{ mb: 4 }}
+                sx={{ mb: 6 }}
                 label='Code'
                 onChange={onChange}
                 error={Boolean(errors.code)}
@@ -250,60 +206,29 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
             )}
           />
           <Controller
-            name='name'
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label='Nom'
-                onChange={onChange}
-                error={Boolean(errors.name)}
-                {...(errors.name && { helperText: errors.name.message })}
-              />
-            )}
-          />
-          <Controller
-            name='description'
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label='Description'
-                onChange={onChange}
-                error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
-              />
-            )}
-          />
-          <Controller
-            name='modelId'
+            name='produitId'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 select
                 fullWidth
-                sx={{ mb: 4 }}
-                label='Model'
-                error={Boolean(errors.modelId)}
-                {...(errors.modelId && { helperText: errors.modelId.message })}
+                sx={{ mb: 6 }}
+                label='Produit'
+                error={Boolean(errors.produitId)}
+                {...(errors.produitId && { helperText: errors.produitId.message })}
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
               >
-                <MenuItem value={0}>Selectionnez un model</MenuItem>
-                {models?.map(model => (
-                  <MenuItem key={model.id} value={model.id}>
-                    {model.name}
+                <MenuItem value={0}>Selectionnez un produit</MenuItem>
+                {produits?.map(produit => (
+                  <MenuItem key={produit.id} value={produit.id}>
+                    {produit.name}
                   </MenuItem>
                 ))}
               </CustomTextField>
             )}
           />
+
           <Controller
             name='fournisseurId'
             control={control}
@@ -312,8 +237,8 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
               <CustomTextField
                 select
                 fullWidth
-                sx={{ mb: 4 }}
-                label='Fournisseur'
+                sx={{ mb: 6 }}
+                label='Fournisseurs'
                 error={Boolean(errors.fournisseurId)}
                 {...(errors.fournisseurId && { helperText: errors.fournisseurId.message })}
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
@@ -327,35 +252,20 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
               </CustomTextField>
             )}
           />
+
           <Controller
-            name='pv'
+            name='qte'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
                 value={value}
-                sx={{ mb: 4 }}
-                label='Prix de vente'
+                sx={{ mb: 6 }}
+                label='Quantité'
                 onChange={onChange}
-                error={Boolean(errors.pv)}
-                {...(errors.pv && { helperText: errors.pv.message })}
-              />
-            )}
-          />
-          <Controller
-            name='stock_min'
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label='Stock minimal'
-                onChange={onChange}
-                error={Boolean(errors.stock_min)}
-                {...(errors.stock_min && { helperText: errors.stock_min.message })}
+                error={Boolean(errors.qte)}
+                {...(errors.qte && { helperText: errors.qte.message })}
               />
             )}
           />
@@ -389,4 +299,4 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
   )
 }
 
-export default SidebarAddProduit
+export default SidebarAddEntree
