@@ -104,15 +104,13 @@ const FournisseurList = () => {
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [addFournisseurOpen, setAddFournisseurOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const [total, setTotal] = useState(40)
   const [currentFournisseur, setCurrentFournisseur] = useState<null | Fournisseur>(null)
 
   // Display of columns according to user roles in the Datagrid
   const getColumns = (handleUpdateFournisseur: (fournisseur: Fournisseur) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.25,
-        minWidth: 200,
+        width: 500,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -150,8 +148,7 @@ const FournisseurList = () => {
         }
       },
       {
-        flex: 0.25,
-        minWidth: 200,
+        width: 500,
         field: 'description',
         renderHeader: () => (
           <Tooltip title={t('Description')}>
@@ -190,8 +187,7 @@ const FournisseurList = () => {
         }
       },
       {
-        flex: 0.1,
-        minWidth: 50,
+        width: 200,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -247,8 +243,8 @@ const FournisseurList = () => {
   }
 
   // Axios call to loading Data
-  const getListFournisseurs = async (page: number, pageSize: number) => {
-    const result = await fournisseurService.listFournisseurs({ page: page + 1, length: pageSize })
+  const getListFournisseurs = async () => {
+    const result = await fournisseurService.listFournisseurs()
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
@@ -261,7 +257,6 @@ const FournisseurList = () => {
 
       setFournisseurs(filteredData)
       setStatusFournisseurs(false)
-      setTotal(Number(result.total))
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
@@ -270,7 +265,7 @@ const FournisseurList = () => {
   }
 
   const handleChange = async () => {
-    getListFournisseurs(0, 10)
+    getListFournisseurs()
   }
 
   // Control search data in datagrid
@@ -299,11 +294,6 @@ const FournisseurList = () => {
     toggleAddFournisseurDrawer()
   }
 
-  // Pagination
-  useEffect(() => {
-    getListFournisseurs(paginationModel.page, paginationModel.pageSize)
-  }, [paginationModel])
-
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
@@ -327,8 +317,7 @@ const FournisseurList = () => {
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             pagination
-            paginationMode='server'
-            rowCount={total}
+            paginationMode='client'
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />

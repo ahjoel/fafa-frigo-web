@@ -40,13 +40,13 @@ const TableHeader = (props: TableHeaderProps) => {
       />
 
       <Box sx={{ display: 'flex', alignItems: 'right' }}>
-        <Button onClick={toggle} variant='contained' sx={{ height: '38px' }}>
+        <Button onClick={toggle} variant='contained' sx={{ height: '38px', '&:hover': { backgroundColor: '#2a3645' } }}>
           <span style={{ marginRight: '0.2rem' }}>{t('Add an fournisseur')}</span>
           <Icon icon='tabler:plus' />
         </Button>
 
         <Button
-          sx={{ marginLeft: '5px' }}
+          sx={{ marginLeft: '5px', '&:hover': { backgroundColor: '#2a3645' }}}
           size='small'
           variant='contained'
           onClick={() => {

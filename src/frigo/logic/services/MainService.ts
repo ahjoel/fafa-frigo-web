@@ -924,7 +924,7 @@ export default class MainService {
     return result
   }
 
-  async listFournisseurs(object: any = { page: 1, length: 10 }) {
+  async listFournisseurs() {
     const result = {
       success: false,
       code: -1,
@@ -935,7 +935,7 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all`, {
         headers: {
           ...getHeadersInformation()
         }
@@ -947,7 +947,6 @@ export default class MainService {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.fournisseurs
-        result.total = response.data.data.fournisseursNumber
       } else {
         result.description = response.data.description
       }
@@ -961,7 +960,7 @@ export default class MainService {
     return result
   }
 
-  async readAllFournisseurs(object: any = { page: 1, length: 500 }) {
+  async readAllFournisseurs() {
     const result = {
       success: false,
       code: -1,
@@ -972,7 +971,7 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`fournisseurs/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`fournisseurs/all`, {
         headers: {
           ...getHeadersInformation()
         }
@@ -984,7 +983,6 @@ export default class MainService {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.fournisseurs
-        result.total = response.data.data.fournisseursNumber
       } else {
         result.description = response.data.description
       }

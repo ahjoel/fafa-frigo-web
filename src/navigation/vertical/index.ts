@@ -18,10 +18,6 @@ const navigation = (): VerticalNavItemsType => {
     icon: "tabler:settings",
     children: [
       {
-        title: `Liste des catégories`,
-        path: "/frigo/models/list",
-      },
-      {
         title: `Liste des clients`,
         path: "/frigo/clients/list",
       },
