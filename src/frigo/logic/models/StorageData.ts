@@ -3,7 +3,7 @@ import MainModel from './MainModel'
 export default class StorageData extends MainModel {
   productId: number
   product: string
-  model: string
+  categorie: string
   fournisseur: string
   quantity: number
   pv: number
@@ -19,7 +19,7 @@ export default class StorageData extends MainModel {
     deletedAt = '',
     productId = 0,
     product = '',
-    model = '',
+    categorie = '',
     fournisseur = '',
     quantity = 0,
     pv = 0,
@@ -28,7 +28,7 @@ export default class StorageData extends MainModel {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
     this.productId = productId
     this.product = product
-    this.model = model
+    this.categorie = categorie
     this.fournisseur = fournisseur
     this.quantity = quantity
     this.pv = pv

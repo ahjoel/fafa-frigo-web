@@ -41,7 +41,7 @@ interface CellType {
 interface FactureData {
   id?: number
   code: string
-  client_id: string
+  client_id: number
 }
 
 interface ColumnType {
@@ -54,7 +54,7 @@ const schema = yup.object().shape({
 
 const defaultValues = {
   code: '',
-  client_id: ''
+  client_id: -1
 }
 
 const FactureEnCours = () => {
@@ -76,24 +76,31 @@ const FactureEnCours = () => {
       })
 
       if (response.data.status === 200 && response.data.message === 'SUCCESS') {
-        const id = Number(response.data.data.infos[0].nb_id_deja) + 1
-        const mois = response.data.data.infos[0].num_mois
-        const userData = JSON.parse(window.localStorage.getItem('userData') as string)
-        const stock = userData?.zone
-        const codeFormat = `${stock}/BAR/${mois}/${id}`
+        const id = response.data?.data?.infos[0] ? Number(response.data?.data?.infos[0]?.nb_id_deja) + 1 : 1
+        const currentDate = new Date();
+
+        // Récupérer l'année et le mois actuel
+        const currentYear = currentDate.getFullYear(); // Année complète (ex : 2024)
+        const currentMonth = currentDate.getMonth() + 1; // Mois (1-12)
+
+        // Vous pouvez formater l'année et le mois pour les utiliser dans votre code
+        const formattedMonth = currentMonth.toString().padStart(2, '0'); // Pour avoir un mois à deux chiffres (ex : "03" pour mars)
+        const initAn = currentYear.toString().slice(-2); // Derniers 2 chiffres de l'année (ex : "24" pour 2024)
+
+        const codeFormat = `FA${initAn}${formattedMonth}${id}`
         setFactureCode(codeFormat)
       }
     } catch (error) {
       console.error('Error submitting data:', error)
       setOpenNotification(true)
       setTypeMessage('error')
-      setMessage('Une erreur est survenue')
+      setMessage('Une erreur est survenue96')
     }
   }
 
   const loadClients = async () => {
     try {
-      const response = await axios.get(`clients/all?page=1&length=1000`, {
+      const response = await axios.get(`clients/all`, {
         headers: {
           ...getHeadersInformation()
         }
@@ -254,7 +261,7 @@ const FactureEnCours = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
+        width: 300,
         field: 'product',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -272,7 +279,7 @@ const FactureEnCours = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { product, model } = row
+          const { product, categorie } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -287,7 +294,7 @@ const FactureEnCours = () => {
                   {product}
                 </Typography>
                 <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
-                  {model}
+                  {categorie}
                 </Typography>
               </Box>
             </Box>
@@ -295,46 +302,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.1,
-        field: 'fournisseur',
-        renderHeader: () => (
-          <Tooltip title='Fournisseur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Fournis.
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { fournisseur } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {fournisseur}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.1,
+        width: 200,
         field: 'quantity',
         renderHeader: () => (
           <Tooltip title='Quantité'>
@@ -373,7 +341,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.2,
+        width: 200,
         field: 'total',
         renderHeader: () => (
           <Tooltip title='Total'>
@@ -416,7 +384,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.2,
+        width: 150,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -447,7 +415,7 @@ const FactureEnCours = () => {
         )
       },
       {
-        flex: 0.18,
+        width: 150,
         sortable: false,
         field: 'suppression',
         renderHeader: () => (
@@ -525,7 +493,7 @@ const FactureEnCours = () => {
           // Retirer la propriété id de chaque objet dans parsedCartData
           const modifiedCartData = parsedCartData.map(productSanitize => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { id, fournisseur, model, product, stockDispo, ...rest } = productSanitize
+            const { id, product, stockDispo, ...rest } = productSanitize
 
             return rest
           })
@@ -533,7 +501,6 @@ const FactureEnCours = () => {
           // Ajout des propriétés facture_id et stock à chaque objet dans modifiedCartData
           modifiedCartData.forEach(product => {
             product.facture_id = factureId
-            product.stock = 'R1'
           })
 
           const nombreProduitFactureTotal = modifiedCartData.length
@@ -651,7 +618,7 @@ const FactureEnCours = () => {
                     {...(errors.client_id && { helperText: errors.client_id.message })}
                     SelectProps={{ value: value, onChange: e => onChange(e) }}
                   >
-                    <MenuItem value=''>Sélectionnez la table client</MenuItem>
+                    <MenuItem value={0}>Sélectionnez la table client</MenuItem>
                     {clients?.map(client => (
                       <MenuItem key={client.id} value={client.id}>
                         {client.name}

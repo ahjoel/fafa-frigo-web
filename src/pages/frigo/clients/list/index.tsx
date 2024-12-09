@@ -115,7 +115,7 @@ const ClientList = () => {
   const getColumns = (handleUpdateClient: (client: Client) => void) => {
     const colArray: ColumnType[] = [
       {
-        width: 400,
+        width: 300,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -153,7 +153,7 @@ const ClientList = () => {
         }
       },
       {
-        width: 400,
+        width: 300,
         field: 'contact',
         renderHeader: () => (
           <Tooltip title={t('Contact')}>
@@ -192,7 +192,7 @@ const ClientList = () => {
         }
       },
       {
-        width: 400,
+        width: 300,
         field: 'adresse',
         renderHeader: () => (
           <Tooltip title={t('Adresse')}>
