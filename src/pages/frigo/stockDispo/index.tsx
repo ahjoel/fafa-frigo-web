@@ -52,13 +52,12 @@ const EntreeR1List = () => {
   const [entreesR1Dispo, setEntreesR1Dispo] = useState<EntreeR1Dispo[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const [total, setTotal] = useState(40)
 
   // Display of columns according to user roles in the Datagrid
   const getColumns = (handleAddToCart: (entreeR1Dispo: EntreeR1Dispo) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.25,
+        width: 250,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -97,10 +96,10 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.18,
-        field: 'model',
+        width: 200,
+        field: 'categorie',
         renderHeader: () => (
-          <Tooltip title='Model'>
+          <Tooltip title='Categorie'>
             <Typography
               noWrap
               sx={{
@@ -110,12 +109,12 @@ const EntreeR1List = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Model
+              Categorie
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { model } = row
+          const { categorie } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -128,7 +127,7 @@ const EntreeR1List = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {model.toString()}
+                  {categorie.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -136,46 +135,7 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.18,
-        field: 'fournisseur',
-        renderHeader: () => (
-          <Tooltip title='Fournisseur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Fournisseur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { fournisseur } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {fournisseur}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.18,
+        width: 200,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -214,7 +174,7 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.18,
+        width: 200,
         field: 'st_dispo',
         renderHeader: () => (
           <Tooltip title='Quantité Disponible'>
@@ -253,7 +213,7 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.15,
+        width: 200,
         field: 'stockMinimal',
         renderHeader: () => (
           <Tooltip title='Stock'>
@@ -292,7 +252,7 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.2,
+        width: 200,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -312,7 +272,7 @@ const EntreeR1List = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Créer une facture avec ce produit du stock'>
+            <Tooltip title='Créer une facture avec ce produit du frigo'>
               <IconButton
                 size='small'
                 sx={{ color: 'text.primary', ':hover': 'none' }}
@@ -334,8 +294,8 @@ const EntreeR1List = () => {
   }
 
   // Axios call to loading Data
-  const getListEntreesR1Dispo = async (page: number, pageSize: number) => {
-    const result = await entreeR1Service.listEntreesR1Dispo({ page: page + 1, length: pageSize })
+  const getListEntreesR1Dispo = async () => {
+    const result = await entreeR1Service.listEntreesR1Dispo()
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
@@ -343,8 +303,7 @@ const EntreeR1List = () => {
       const filteredData = (result.data as EntreeR1Dispo[]).filter(entree => {
         return (
           (entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered)) ||
-          entree.model.toString().toLowerCase().includes(queryLowered) ||
-          entree.fournisseur.toLowerCase().includes(queryLowered) ||
+          entree.categorie.toString().toLowerCase().includes(queryLowered) ||
           entree.st_dispo.toString().toLowerCase().includes(queryLowered) ||
           entree.pv.toString().toLowerCase().includes(queryLowered) ||
           entree.stockMinimal.toString().toLowerCase().includes(queryLowered)
@@ -352,7 +311,6 @@ const EntreeR1List = () => {
       })
       setEntreesR1Dispo(filteredData)
       setStatusEntreeR1(false)
-      setTotal(Number(result.total))
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
@@ -361,7 +319,7 @@ const EntreeR1List = () => {
   }
 
   const handleChange = async () => {
-    getListEntreesR1Dispo(0, 10)
+    getListEntreesR1Dispo()
   }
 
   // Control search data in datagrid
@@ -386,8 +344,7 @@ const EntreeR1List = () => {
       const productToCart = {
         productId: entreeR1Dispo.id,
         product: entreeR1Dispo.produit.toString(),
-        model: entreeR1Dispo.model,
-        fournisseur: entreeR1Dispo.fournisseur,
+        categorie: entreeR1Dispo.categorie,
         pv: Number(entreeR1Dispo.pv),
         stockDispo: Number(entreeR1Dispo.st_dispo),
         quantity: 1
@@ -407,11 +364,11 @@ const EntreeR1List = () => {
         localStorage.setItem('cart1', JSON.stringify(cartProductArray))
         setOpenNotification(true)
         setTypeMessage('success')
-        setMessage('Produit ajouté à la facture en cours')
+        setMessage('Le produit est ajouté à la facture en cours')
       } else {
         setOpenNotification(true)
         setTypeMessage('error')
-        setMessage('Produit existe déja sur la facture en cours')
+        setMessage('Le produit existe déja sur la facture en cours')
       }
     } else {
       setOpenNotification(true)
@@ -419,11 +376,6 @@ const EntreeR1List = () => {
       setMessage('Le stock disponible est insuffisant pour créer une facture')
     }
   }
-
-  // Pagination
-  useEffect(() => {
-    getListEntreesR1Dispo(paginationModel.page, paginationModel.pageSize)
-  }, [paginationModel])
 
   return (
     <Grid container spacing={6.5}>
@@ -441,14 +393,12 @@ const EntreeR1List = () => {
           <DataGrid
             autoHeight
             loading={statusEntreeR1}
-            rowHeight={62}
             rows={entreesR1Dispo as never[]}
             columns={columns as GridColDef<never>[]}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             pagination
-            paginationMode='server'
-            rowCount={total}
+            paginationMode='client'
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />

@@ -27,6 +27,7 @@ import Entree from "src/frigo/logic/models/Entree";
 import AddEntreeDrawer from "src/frigo/views/entree/list/AddEntreeDrawer";
 import Fournisseur from "src/frigo/logic/models/Fournisseur";
 import FournisseurService from "src/frigo/logic/services/FournisseurService";
+import { TextField } from "@mui/material";
 
 interface CellType {
   row: Entree;

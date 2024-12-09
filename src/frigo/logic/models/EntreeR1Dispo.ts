@@ -4,8 +4,7 @@ import Produit from './Produit'
 export default class EntreeR1Dispo extends MainModel {
   produit: Produit | string
   produitId: number
-  model: string
-  fournisseur: string
+  categorie: string
   st_dispo: string
   stockMinimal: string
   pv: string
@@ -20,7 +19,7 @@ export default class EntreeR1Dispo extends MainModel {
     deletedAt = '',
     produit = new Produit(),
     produitId = 0,
-    model = '',
+    categorie = '',
     fournisseur = '',
     st_dispo = '',
     stockMinimal = '',
@@ -30,8 +29,7 @@ export default class EntreeR1Dispo extends MainModel {
 
     this.produit = produit
     this.produitId = produitId
-    this.model = model
-    this.fournisseur = fournisseur
+    this.categorie = categorie
     this.st_dispo = st_dispo
     this.stockMinimal = stockMinimal
     this.pv = pv

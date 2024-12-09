@@ -41,7 +41,7 @@ const navigation = (): VerticalNavItemsType => {
       },
       {
         title: `Stock Disponible`,
-        path: "/frigo/stockDispoR1",
+        path: "/frigo/stockDispo",
       },
     ],
   };

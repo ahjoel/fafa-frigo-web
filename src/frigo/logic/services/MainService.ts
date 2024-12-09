@@ -1462,6 +1462,40 @@ export default class MainService {
     return result
   }
 
+  async searchCodeOrCreatedDateOnEntrees(object: any = { query: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all?search=${object.query}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.mouvementsEntree
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
   async listEntreesRC(object: any = { page: 1, length: 10 }) {
     const result = {
       success: false,
@@ -1499,7 +1533,7 @@ export default class MainService {
     return result
   }
 
-  async listEntreesR1Dispo(object: any = { page: 1, length: 10 }) {
+  async listEntreesR1Dispo() {
     const result = {
       success: false,
       code: -1,
@@ -1510,19 +1544,16 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all/dispo?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all/dispo`, {
         headers: {
           ...getHeadersInformation()
         }
       })
 
-      // console.log(`${this.url}/all`);
-
       if (response.data.status === 200) {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.mouvementsEntreeR1Dispo
-        result.total = response.data.data.mouvementsEntreeR1DispoNumber
       } else {
         result.description = response.data.description
       }
