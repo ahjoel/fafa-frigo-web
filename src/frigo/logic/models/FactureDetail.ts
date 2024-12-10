@@ -2,7 +2,7 @@ import MainModel from './MainModel'
 
 export default class FactureDetail extends MainModel {
   produit: string
-  modele: string
+  categorie: string
   fournisseur: string
   qte: number
   pv: number
@@ -18,7 +18,7 @@ export default class FactureDetail extends MainModel {
     deletedBy = null,
     deletedAt = '',
     produit = '',
-    modele = '',
+    categorie = '',
     qte = 0,
     pv = 0,
     factureId = 0,
@@ -28,7 +28,7 @@ export default class FactureDetail extends MainModel {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
     this.produit = produit
-    this.modele = modele
+    this.categorie = categorie
     this.fournisseur = fournisseur
     this.qte = qte
     this.pv = pv

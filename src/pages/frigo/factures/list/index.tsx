@@ -272,7 +272,6 @@ const FactureList = () => {
   const [addFactureOpen, setAddFactureOpen] = useState<boolean>(false)
   const [addFactureDetailOpen, setAddFactureDetailOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const [total, setTotal] = useState(40)
   const [currentFacture, setCurrentFacture] = useState<null | Facture>(null)
   const [currentFactureDetail, setCurrentFactureDetail] = useState<null | FactureDetail>(null)
 
@@ -313,7 +312,7 @@ const FactureList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
+        width: 100,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -353,7 +352,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.15,
+        width: 200,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date creation'>
@@ -393,7 +392,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.1,
+        width: 120,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -434,7 +433,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.05,
+        width: 100,
         field: 'tax',
         renderHeader: () => (
           <Tooltip title='Tax'>
@@ -473,7 +472,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.15,
+        width: 200,
         field: 'nbproduit',
         renderHeader: () => (
           <Tooltip title='Nombre(s) Produit(s)'>
@@ -513,7 +512,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.15,
+        width: 200,
         field: 'totalfacture',
         renderHeader: () => (
           <Tooltip title='Montant Facture'>
@@ -552,7 +551,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.1,
+        width: 100,
         field: 'statut',
         renderHeader: () => (
           <Tooltip title='Statut'>
@@ -591,46 +590,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.1,
-        field: 'stock',
-        renderHeader: () => (
-          <Tooltip title='Stock'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Stock
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { stock } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {stock}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.2,
+        width: 200,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -704,7 +664,7 @@ const FactureList = () => {
               </Tooltip>
             )}
 
-            {row.statut === 'impayée' && (profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
+            {row.statut === 'impayée' && (profile === 'ADMINISTRATEUR' || profile === 'GODE_MODE') && (
               <Tooltip title='Supprimer'>
                 <IconButton
                   size='small'
@@ -742,7 +702,7 @@ const FactureList = () => {
   const getColumnsFactureDetail = (handleDeleteProduitFacture: (facture: FactureDetail) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
+        width: 150,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -781,10 +741,10 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.15,
-        field: 'modele',
+        width: 100,
+        field: 'categorie',
         renderHeader: () => (
-          <Tooltip title='Modèle'>
+          <Tooltip title='Categorie'>
             <Typography
               noWrap
               sx={{
@@ -794,12 +754,12 @@ const FactureList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Modèle
+              Categorie
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellTypeFacture) => {
-          const { modele } = row
+          const { categorie } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -812,56 +772,54 @@ const FactureList = () => {
                     color: 'secondary.main'
                   }}
                 >
-                  {modele}
+                  {categorie}
                 </Typography>
               </Box>
             </Box>
           )
         }
       },
-      {
-        flex: 0.15,
-        field: 'fournisseur',
-        renderHeader: () => (
-          <Tooltip title='Fournisseur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Fournisseur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellTypeFacture) => {
-          const { fournisseur } = row
+      // {
+      //   flex: 0.15,
+      //   field: 'fournisseur',
+      //   renderHeader: () => (
+      //     <Tooltip title='Fournisseur'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Fournisseur
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellTypeFacture) => {
+      //     const { fournisseur } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'secondary.main'
-                  }}
-                >
-                  {fournisseur}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'secondary.main'
+      //             }}
+      //           >
+      //             {fournisseur}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
+        width: 100,
         field: 'qte',
         renderHeader: () => (
           <Tooltip title='Quantité'>
@@ -902,9 +860,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
+        width: 100,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -947,8 +903,7 @@ const FactureList = () => {
     ]
     if (etatFacture === 'impayée') {
       colArray.push({
-        flex: 0.1,
-        minWidth: 50,
+        width: 100,
         sortable: false,
         field: 'action',
         renderHeader: () => (
@@ -1007,7 +962,7 @@ const FactureList = () => {
 
   // Axios call to loading Data
   const getListFactures = async (page: number, pageSize: number) => {
-    const result = await factureService.listFactures({ page: page + 1, length: pageSize })
+    const result = await factureService.listFactures()
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
@@ -1018,14 +973,12 @@ const FactureList = () => {
           facture.client.toString().toLowerCase().includes(queryLowered) ||
           facture.taxe.toString().toLowerCase().includes(queryLowered) ||
           facture.nbproduit.toLowerCase().includes(queryLowered) ||
-          facture.statut.toLowerCase().includes(queryLowered) ||
-          facture.stock.toLowerCase().includes(queryLowered)
+          facture.statut.toLowerCase().includes(queryLowered)
         )
       })
 
       setFactures(filteredData)
       setStatusFactures(false)
-      setTotal(Number(result.total))
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
@@ -1040,16 +993,16 @@ const FactureList = () => {
     if (result.success) {
       setStatusFactureDetail(false)
       const queryLowered = valueDetFact.toLowerCase()
-      const filteredData = (result.data as FactureDetail[]).filter(detail => {
+      const filteredDatas = (result.data as FactureDetail[]).filter(detail => {
         return (
           detail.produit.toLowerCase().includes(queryLowered) ||
-          detail.modele.toLowerCase().includes(queryLowered) ||
-          detail.fournisseur.toLowerCase().includes(queryLowered) ||
+          detail.categorie.toLowerCase().includes(queryLowered) ||
+          detail?.fournisseur.toLowerCase().includes(queryLowered) ||
           detail.qte.toString().toLowerCase().includes(queryLowered) ||
           detail.pv.toString().toLowerCase().includes(queryLowered)
         )
       })
-      setFacturesDetails(filteredData)
+      setFacturesDetails(filteredDatas)
       setStatusFactures(false)
     } else {
       setOpenNotification(true)
@@ -1110,8 +1063,7 @@ const FactureList = () => {
   }
 
   const handleLoadingProduits = async () => {
-    const result =
-      stock === 'R1' ? await produitService.listProduitsLongue() : await produitService.listProduitsRcLongue()
+    const result = await produitService.listProduitsLongue()
 
     if (result.success) {
       setProduits(result.data as Produit[])
@@ -1160,11 +1112,6 @@ const FactureList = () => {
     toggleAddFactureDetailDrawer()
   }
 
-  // Pagination
-  useEffect(() => {
-    getListFactures(paginationModel.page, paginationModel.pageSize)
-  }, [paginationModel])
-
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
@@ -1186,8 +1133,7 @@ const FactureList = () => {
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             pagination
-            paginationMode='server'
-            rowCount={total}
+            paginationMode='client'
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
@@ -1302,7 +1248,7 @@ const FactureList = () => {
                           {facturesDetp.qte}
                         </td>
                         <td className='description' style={styles['.description']}>
-                          {facturesDetp.produit} {facturesDetp.modele}
+                          {facturesDetp.produit}
                         </td>
                         <td className='price' style={styles['.price']}>
                           {facturesDetp.pv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} F
@@ -1352,33 +1298,19 @@ const FactureList = () => {
       />
 
       {/* Ajouter un produit sur une facture impayée */}
-      {stock
-        ? etatFacture === 'impayée' && (
-            <AddFactureDetailDrawer
-              open={addFactureDetailOpen}
-              toggle={toggleAddFactureDetailDrawer}
-              onAdd={handleChangeFactureAndDetail}
-              products={produits}
-              codeFact={code}
-              stock={stockR1}
-              factureId={idFacture}
-              currentFactureDetail={currentFactureDetail}
-              onSuccess={handleSuccess}
-            />
-          )
-        : etatFacture === 'impayée' && (
-            <AddFactureDetailDrawer
-              open={addFactureDetailOpen}
-              toggle={toggleAddFactureDetailDrawer}
-              onAdd={handleChangeFactureAndDetail}
-              products={produits}
-              codeFact={code}
-              stock={!stockR1}
-              factureId={idFacture}
-              currentFactureDetail={currentFactureDetail}
-              onSuccess={handleSuccess}
-            />
-          )}
+      {
+        etatFacture === 'impayée' && (
+          <AddFactureDetailDrawer
+            open={addFactureDetailOpen}
+            toggle={toggleAddFactureDetailDrawer}
+            onAdd={handleChangeFactureAndDetail}
+            products={produits}
+            codeFact={code}
+            factureId={idFacture}
+            currentFactureDetail={currentFactureDetail}
+            onSuccess={handleSuccess}
+          />
+        )}
 
       {/* Notification */}
       <Snackbar

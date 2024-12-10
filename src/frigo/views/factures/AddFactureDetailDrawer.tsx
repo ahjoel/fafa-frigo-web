@@ -38,7 +38,6 @@ interface SidebarAddFactureDetailType {
   products: Produit[]
   factureId: number
   codeFact: string
-  stock: boolean
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -61,7 +60,7 @@ const defaultValues = {
 
 const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
   // ** Props
-  const { open, toggle, onSuccess, onAdd, stock, currentFactureDetail, products, factureId, codeFact } = props
+  const { open, toggle, onSuccess, onAdd, currentFactureDetail, products, factureId, codeFact } = props
 
   const [send, setSend] = useState<boolean>(false)
   const mouvementService = new SortieR1Service()
@@ -99,57 +98,32 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
       qte: Number(data.qte)
     }
 
-    if (stock) {
-      if (id === -1) {
-        const result = await mouvementService.createSortieR1(sendData)
-        setSend(false)
 
-        console.log('resultR1 :::', result.description)
+    if (id === -1) {
+      const result = await mouvementService.createSortieR1(sendData)
+      setSend(false)
 
-        if (result.description === 'La quantité est supérieur au stock disponible') {
-          setOpenNotification(true)
-          setTypeMessage('error')
-          setMessage(result.description)
-        }
+      console.log('resultR1 :::', result.description)
 
-        if (result.success) {
-          reset()
-          onAdd()
-          toggle()
-          onSuccess('Registration completed successfully')
-        } else {
-          setOpenNotification(true)
-          setTypeMessage('error')
-          console.log('-----', result.description)
-          setMessage('Une erreur est survenue.')
-        }
+      if (result.description === 'La quantité est supérieur au stock disponible') {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage(result.description)
       }
-    } else {
-      if (id === -1) {
-        const result = await mouvementService.createSortieRC(sendData)
-        setSend(false)
 
-        console.log('resultRC :::', result.description)
-
-        if (result.description === 'La quantité est supérieur au stock disponible') {
-          setOpenNotification(true)
-          setTypeMessage('error')
-          setMessage(result.description)
-        }
-
-        if (result.success) {
-          reset()
-          onAdd()
-          toggle()
-          onSuccess('Registration completed successfully')
-        } else {
-          setOpenNotification(true)
-          setTypeMessage('error')
-          console.log('-----', result.description)
-          setMessage('Une erreur est survenue.')
-        }
+      if (result.success) {
+        reset()
+        onAdd()
+        toggle()
+        onSuccess('Registration completed successfully')
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        console.log('-----', result.description)
+        setMessage('Une erreur est survenue.')
       }
     }
+
 
     // if (id === -1) {
     //   const result = await mouvementService.createSortieR1(sendData)

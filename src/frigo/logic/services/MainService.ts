@@ -1211,7 +1211,7 @@ export default class MainService {
     return result
   }
 
-  async listFactures(object: any = { page: 1, length: 10 }) {
+  async listFactures() {
     const result = {
       success: false,
       code: -1,
@@ -1222,7 +1222,7 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all`, {
         headers: {
           ...getHeadersInformation()
         }

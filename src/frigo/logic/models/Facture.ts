@@ -9,7 +9,6 @@ export default class Facture extends MainModel {
   nbproduit: string
   totalfacture: string
   statut: string
-  stock: string
 
   constructor(
     id = -1,
@@ -25,8 +24,7 @@ export default class Facture extends MainModel {
     taxe = 0,
     nbproduit = '',
     totalfacture = '',
-    statut = '',
-    stock = ''
+    statut = ''
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
@@ -37,6 +35,5 @@ export default class Facture extends MainModel {
     this.nbproduit = nbproduit
     this.totalfacture = totalfacture
     this.statut = statut
-    this.stock = stock
   }
 }
