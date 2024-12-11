@@ -8,6 +8,9 @@ export default class FactureDetail extends MainModel {
   pv: number
   factureId: number
   produitId: number
+  codeFacture: string
+  client: string
+  dateFacture: string
 
   constructor(
     id = -1,
@@ -23,7 +26,10 @@ export default class FactureDetail extends MainModel {
     pv = 0,
     factureId = 0,
     produitId = 0,
-    fournisseur = ''
+    fournisseur = '',
+    codeFacture = '',
+    client = '',
+    dateFacture = ''
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
@@ -34,5 +40,8 @@ export default class FactureDetail extends MainModel {
     this.pv = pv
     this.factureId = factureId
     this.produitId = produitId
+    this.codeFacture = codeFacture
+    this.client = client
+    this.dateFacture = dateFacture
   }
 }

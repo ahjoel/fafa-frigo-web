@@ -1228,13 +1228,10 @@ export default class MainService {
         }
       })
 
-      // console.log(`${this.url}/all`);
-
       if (response.data.status === 200) {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.facturesR1
-        result.total = response.data.data.factureTotalR1Number
       } else {
         result.description = response.data.description
       }

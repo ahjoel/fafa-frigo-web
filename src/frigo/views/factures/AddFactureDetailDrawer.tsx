@@ -103,8 +103,6 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
       const result = await mouvementService.createSortieR1(sendData)
       setSend(false)
 
-      console.log('resultR1 :::', result.description)
-
       if (result.description === 'La quantité est supérieur au stock disponible') {
         setOpenNotification(true)
         setTypeMessage('error')
@@ -123,34 +121,7 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
         setMessage('Une erreur est survenue.')
       }
     }
-
-
-    // if (id === -1) {
-    //   const result = await mouvementService.createSortieR1(sendData)
-    //   setSend(false)
-
-    //   console.log("result :::", result.description);
-
-    //   if (result.description === "La quantité est supérieur au stock disponible") {
-    //     setOpenNotification(true);
-    //     setTypeMessage("error");
-    //     setMessage(result.description)
-    //   }
-
-    //   if (result.success) {
-    //     reset()
-    //     onAdd()
-    //     toggle()
-    //     onSuccess("Registration completed successfully");
-    //   } else {
-    //     setOpenNotification(true);
-    //     setTypeMessage("error");
-    //     console.log("-----", result.description);
-    //     setMessage("Une erreur est survenue.")
-    //   }
-    // }
   }
-  console.log('fact-Id :::', factureId)
 
   const handleClose = () => {
     toggle()

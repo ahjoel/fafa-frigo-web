@@ -152,7 +152,7 @@ const FactureList = () => {
         handleClosePayement()
         setOpenNotification(true)
         setTypeMessage('success')
-        setMessage('Facture réglée avec succès, vous pouvez le télécharger')
+        setMessage('Facture réglée avec succès')
       } else {
         setSendPayement(false)
         setOpenNotification(true)
@@ -218,8 +218,8 @@ const FactureList = () => {
 
       if (rep === null) {
         setSendDelete(false)
-        handleChange()
-        getDetailsFacture()
+        handleChangeFactureAndDetail()
+        getDetailsFactureForPrint()
         handleClose()
         setOpenNotification(true)
         setTypeMessage('success')
@@ -249,6 +249,7 @@ const FactureList = () => {
   const [message, setMessage] = useState('')
 
   const handleSuccess = (message: string, type = 'success') => {
+    getDetailsFactureForPrint()
     setOpenNotification(true)
     setTypeMessage(type)
     const messageTrans = t(message)
@@ -262,8 +263,6 @@ const FactureList = () => {
     setOpenNotification(false)
   }
 
-  // Loading Agencies Data, Datagrid and pagination - State
-  const stockR1 = true
   const [statusFactures, setStatusFactures] = useState<boolean>(true)
   const [factures, setFactures] = useState<Facture[]>([])
   const [produits, setProduits] = useState<Produit[]>([])
@@ -702,7 +701,7 @@ const FactureList = () => {
   const getColumnsFactureDetail = (handleDeleteProduitFacture: (facture: FactureDetail) => void) => {
     const colArray: ColumnType[] = [
       {
-        width: 150,
+        width: 300,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -741,7 +740,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 100,
+        width: 120,
         field: 'categorie',
         renderHeader: () => (
           <Tooltip title='Categorie'>
@@ -779,45 +778,6 @@ const FactureList = () => {
           )
         }
       },
-      // {
-      //   flex: 0.15,
-      //   field: 'fournisseur',
-      //   renderHeader: () => (
-      //     <Tooltip title='Fournisseur'>
-      //       <Typography
-      //         noWrap
-      //         sx={{
-      //           fontWeight: 500,
-      //           letterSpacing: '1px',
-      //           textTransform: 'uppercase',
-      //           fontSize: '0.8125rem'
-      //         }}
-      //       >
-      //         Fournisseur
-      //       </Typography>
-      //     </Tooltip>
-      //   ),
-      //   renderCell: ({ row }: CellTypeFacture) => {
-      //     const { fournisseur } = row
-
-      //     return (
-      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-      //           <Typography
-      //             noWrap
-      //             sx={{
-      //               fontWeight: 500,
-      //               textDecoration: 'none',
-      //               color: 'secondary.main'
-      //             }}
-      //           >
-      //             {fournisseur}
-      //           </Typography>
-      //         </Box>
-      //       </Box>
-      //     )
-      //   }
-      // },
       {
         width: 100,
         field: 'qte',
@@ -860,7 +820,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 100,
+        width: 150,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -961,7 +921,7 @@ const FactureList = () => {
   }
 
   // Axios call to loading Data
-  const getListFactures = async (page: number, pageSize: number) => {
+  const getListFactures = async () => {
     const result = await factureService.listFactures()
 
     if (result.success) {
@@ -1011,6 +971,143 @@ const FactureList = () => {
     }
   }
 
+  const printReceipt = (facturesDetailsPrint: FactureDetail[]) => {
+    const rows = facturesDetailsPrint
+      ?.map(
+        (facturesDetp) => `
+        <div class="details-row">
+          <span>${facturesDetp.qte}</span>
+          <span>${facturesDetp.produit}</span>
+          <span>${facturesDetp.pv.toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')} F</span>
+        </div>
+      `
+      )
+      .join('');
+  
+    const receiptContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Reçu</title>
+          <style>
+              body {
+                  font-family: 'Arial', sans-serif;
+                  font-size: 12px;
+                  margin: 0;
+                  padding: 0;
+              }
+  
+              .receipt {
+                  width: 240px; /* Adapté aux imprimantes thermiques */
+                  padding: 10px;
+              }
+  
+              .receipt-header {
+                  text-align: center;
+                  margin-bottom: 10px;
+              }
+  
+              .receipt-header h1 {
+                  font-size: 14px;
+                  margin: 0;
+              }
+  
+              .receipt-header p {
+                  margin: 2px 0;
+              }
+  
+              .receipt-details {
+                  border-top: 1px dashed #000;
+                  border-bottom: 1px dashed #000;
+                  margin: 10px 0;
+                  padding: 10px 0;
+              }
+  
+              .details-row {
+                  display: flex;
+                  justify-content: space-between;
+              }
+  
+              .details-row span:nth-child(2) {
+                  flex: 2;
+                  text-align: left;
+                  margin-left: 20px;
+              }
+  
+              .details-header span {
+                  font-weight: bold;
+              }
+  
+              .total {
+                  text-align: center;
+                  font-weight: bold;
+                  font-size: 14px;
+              }
+  
+              .footer {
+                  text-align: center;
+                  margin-top: 10px;
+              }
+  
+              .date {
+                  text-align: right;
+              }
+  
+          </style>
+      </head>
+      <body>
+          <div class="receipt">
+              <div class="receipt-header">
+                  <h1>FAFA-FRIGO</h1>
+                  <p>Adetikopé</p>
+                  <p>Tel : (+228) 90 19 71 38</p>
+              </div>
+              <div class="details-row">
+                  <span style="font-weight: bold">${facturesDetailsPrint[0].codeFacture}</span>
+              </div>
+              <div class="details-row" style="margin-top:5px">
+                  <span class="date">${facturesDetailsPrint[0].dateFacture.slice(0, -5).replace(/T/g, " ")}</span>
+                
+              </div>
+              <div class="receipt-details">
+                  <div class="details-row details-header">
+                      <span>Qte</span>
+                      <span>Description</span>
+                      <span>PV</span>
+                  </div>
+                  ${rows}
+              </div>
+              <div class="total">
+                  TOTAL (XOF) : ${
+                    facturesDetailsPrint
+                      ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                  } F
+              </div>
+              <div class="footer">
+                  BON DE COMMANDE
+                  
+              </div>
+          </div>
+          <script>
+              window.onload = function () {
+                  window.print();
+              };
+          </script>
+      </body>
+      </html>
+    `;
+  
+    const printWindow = window.open('', '_blank', 'width=400,height=600');
+    printWindow?.document.open();
+    printWindow?.document.write(receiptContent);
+    printWindow?.document.close();
+    printWindow?.print();
+  };
+
   const handlePrint = () => {
     // Masquer les éléments que vous ne souhaitez pas imprimer
     const dialogActions = document.querySelector('.dialog-actions-dense') as HTMLElement | null
@@ -1042,11 +1139,11 @@ const FactureList = () => {
   }
 
   const handleChange = async () => {
-    getListFactures(0, 10)
+    getListFactures()
   }
 
   const handleChangeFactureAndDetail = async () => {
-    getListFactures(0, 10)
+    getListFactures()
     getDetailsFacture()
   }
 
@@ -1211,7 +1308,7 @@ const FactureList = () => {
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
           onClose={(event, reason) => {
-            if (reason === 'backdropClick') {
+            if (reason != 'backdropClick') {
               handleClosePrint()
             }
           }}
@@ -1220,12 +1317,20 @@ const FactureList = () => {
             <div className='ticket' style={styles['.ticket']}>
               {/* <img src='./logo.png' alt='Logo' style={styles.img} /> */}
               <p className='centered' style={styles['.centered']}>
-                CLAUDEX-BAR
+                FAFA-FRIGO
                 <br />
-                AGOE AMANDETA EPP Amandeta Face Antenne Togocom
+                Adetikope
                 <br />
-                Tel : (+228) 92 80 26 38
+                Tel : (+228) 90 19 71 38
               </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <p style={{ margin: 0 }}>
+                  <>{facturesDetailsPrint[0]?.codeFacture}</> 
+                </p>
+                <p style={{ margin: 0 }}>
+                  <>{facturesDetailsPrint[0]?.dateFacture.slice(0, -5).replace(/T/g, " ")}</> 
+                </p>
+              </div>
               <table style={styles['td, th, tr, table']}>
                 <thead>
                   <tr>
@@ -1271,7 +1376,7 @@ const FactureList = () => {
                 </tbody>
               </table>
               <p className='centered' style={styles['.centered']}>
-                Merci de votre commande !
+                BON DE COMMANDE
               </p>
             </div>
           </DialogContent>
@@ -1280,7 +1385,7 @@ const FactureList = () => {
             <Button variant='contained' onClick={handleClosePrint} color='secondary'>
               {t('Cancel')}
             </Button>
-            <Button variant='contained' onClick={handlePrint}>
+            <Button variant='contained' onClick={() => printReceipt(facturesDetailsPrint)}>
               <span>Imprimer</span> <PrintIcon />
             </Button>
           </DialogActions>
@@ -1310,7 +1415,8 @@ const FactureList = () => {
             currentFactureDetail={currentFactureDetail}
             onSuccess={handleSuccess}
           />
-        )}
+        )
+      }
 
       {/* Notification */}
       <Snackbar
@@ -1336,7 +1442,7 @@ const FactureList = () => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
         onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
+          if (reason != 'backdropClick') {
             handleClose()
           }
         }}
@@ -1370,7 +1476,7 @@ const FactureList = () => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
         onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
+          if (reason != 'backdropClick') {
             handleClosePayement()
           }
         }}
@@ -1398,7 +1504,7 @@ const FactureList = () => {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </Grid>
+    </Grid>    
   )
 }
 
