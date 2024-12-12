@@ -110,7 +110,6 @@ const FactureList = () => {
   const clientService = new ClientService()
   const userData = JSON.parse(window.localStorage.getItem('userData') as string)
   const profile = userData?.profile
-  const stock = userData?.zone
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
@@ -149,6 +148,8 @@ const FactureList = () => {
       if (response.success) {
         setSendPayement(false)
         handleChange()
+        handleChangeFactureAndDetail()
+        getDetailsFactureForPrint()
         handleClosePayement()
         setOpenNotification(true)
         setTypeMessage('success')
@@ -1069,7 +1070,7 @@ const FactureList = () => {
               </div>
               <div class="details-row" style="margin-top:5px">
                   <span class="date">${facturesDetailsPrint[0].dateFacture.slice(0, -5).replace(/T/g, " ")}</span>
-                
+                  <span>${facturesDetailsPrint[0].statut === 'Payée' ? `client : ${facturesDetailsPrint[0].client}` : ``}</span>
               </div>
               <div class="receipt-details">
                   <div class="details-row details-header">
@@ -1085,11 +1086,12 @@ const FactureList = () => {
                       ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                  } F
+                  } F <br/><br/>
+                  ${facturesDetailsPrint[0].statut === 'Payée' ? `PAYEE CASH` : ``}
               </div>
               <div class="footer">
-                  BON DE COMMANDE
-                  
+                  <span>${facturesDetailsPrint[0].statut != 'Payée' ? `BON DE COMMANDE` : ``}</span>
+                  Les produits vendus ne sont ni repris ni echanges pour des raisons sanitaires. 
               </div>
           </div>
           <script>

@@ -3,7 +3,6 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 
 const navigation = (): VerticalNavItemsType => {
   const userProfil = window.localStorage.getItem('profile')
-  const godMode = userProfil === 'GOD_MODE' ? true : false
   const adminMode = userProfil === 'ADMINISTRATEUR' ? true : false
   const facturierMode = userProfil === 'FACTURIER' ? true : false
 
@@ -62,18 +61,9 @@ const navigation = (): VerticalNavItemsType => {
   };
 
   const Reglements = {
-    title: "Règlements",
+    title: `Liste des Règlements`,
     icon: "tabler:currency-dollar",
-    children: [
-      {
-        title: `Liste Règlements`,
-        path: "/frigo/reglements/list",
-      },
-      {
-        title: `Situation Règlements`,
-        path: "/frigo/reglements/situation",
-      },
-    ],
+    path: "/frigo/reglements/list",
   };
 
   const Statistiques = {
@@ -109,12 +99,12 @@ const navigation = (): VerticalNavItemsType => {
   const navArray: any = [Dashboard]
 
   // GODE-MODE
-  godMode && navArray.push(Configuration);
-  godMode && navArray.push(Stock);
-  godMode && navArray.push(Facturation);
-  godMode && navArray.push(Reglements);
-  godMode && navArray.push(Users);
-  godMode && navArray.push(Statistiques);
+  adminMode && navArray.push(Configuration);
+  adminMode && navArray.push(Stock);
+  adminMode && navArray.push(Facturation);
+  adminMode && navArray.push(Reglements);
+  adminMode && navArray.push(Users);
+  adminMode && navArray.push(Statistiques);
 
   return navArray
 }

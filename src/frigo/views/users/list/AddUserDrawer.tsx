@@ -304,7 +304,7 @@ const SidebarAddUser = (props: SidebarAddUser) => {
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
               >
                 <MenuItem value={``}>Selectionnez un profil</MenuItem>
-                <MenuItem value={`GODE_MODE`}>GODE_MODE</MenuItem>
+                <MenuItem value={`ADMINISTRATEUR`}>ADMINISTRATEUR</MenuItem>
                 <MenuItem value={`GERANT`}>GERANT</MenuItem>
                 <MenuItem value={`FACTURIER`}>FACTURIER</MenuItem>
                 <MenuItem value={`CAISSIER`}>CAISSIER</MenuItem>
