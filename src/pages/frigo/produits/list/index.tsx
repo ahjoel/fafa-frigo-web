@@ -160,7 +160,7 @@ const ProduitList = () => {
         }
       },
       {
-        width: 300,
+        width: 180,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -191,6 +191,45 @@ const ProduitList = () => {
                   }}
                 >
                   {name}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 150,
+        field: 'mesure',
+        renderHeader: () => (
+          <Tooltip title='Mesure'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Mesure
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { mesure } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {mesure}
                 </Typography>
               </Box>
             </Box>
@@ -437,6 +476,7 @@ const ProduitList = () => {
             onReload={() => {
               setValue('')
               handleChange()
+              setPaginationModel({page:0, pageSize:10})
             }}
           />
 

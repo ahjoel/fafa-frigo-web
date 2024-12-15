@@ -222,7 +222,7 @@ const SidebarAddEntree = (props: SidebarAddEntreeR1Type) => {
                 <MenuItem value={0}>Selectionnez un produit</MenuItem>
                 {produits?.map(produit => (
                   <MenuItem key={produit.id} value={produit.id}>
-                    {produit.name}
+                    {produit.name} {produit.mesure}
                   </MenuItem>
                 ))}
               </CustomTextField>

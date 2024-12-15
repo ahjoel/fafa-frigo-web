@@ -5,6 +5,7 @@ export default class EntreeR1Dispo extends MainModel {
   produit: Produit | string
   produitId: number
   categorie: string
+  mesure: string
   st_dispo: string
   stockMinimal: string
   pv: string
@@ -20,7 +21,7 @@ export default class EntreeR1Dispo extends MainModel {
     produit = new Produit(),
     produitId = 0,
     categorie = '',
-    fournisseur = '',
+    mesure = '',
     st_dispo = '',
     stockMinimal = '',
     pv = ''
@@ -30,6 +31,7 @@ export default class EntreeR1Dispo extends MainModel {
     this.produit = produit
     this.produitId = produitId
     this.categorie = categorie
+    this.mesure = mesure
     this.st_dispo = st_dispo
     this.stockMinimal = stockMinimal
     this.pv = pv

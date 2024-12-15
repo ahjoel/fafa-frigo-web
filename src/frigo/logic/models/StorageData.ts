@@ -4,6 +4,7 @@ export default class StorageData extends MainModel {
   productId: number
   product: string
   categorie: string
+  mesure: string
   fournisseur: string
   quantity: number
   pv: number
@@ -20,6 +21,7 @@ export default class StorageData extends MainModel {
     productId = 0,
     product = '',
     categorie = '',
+    mesure = '',
     fournisseur = '',
     quantity = 0,
     pv = 0,
@@ -29,6 +31,7 @@ export default class StorageData extends MainModel {
     this.productId = productId
     this.product = product
     this.categorie = categorie
+    this.mesure = mesure
     this.fournisseur = fournisseur
     this.quantity = quantity
     this.pv = pv

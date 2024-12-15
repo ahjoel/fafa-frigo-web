@@ -279,7 +279,7 @@ const FactureEnCours = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { product, categorie } = row
+          const { product, categorie, mesure } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -291,7 +291,7 @@ const FactureEnCours = () => {
                     textDecoration: 'none'
                   }}
                 >
-                  {product}
+                  {product} {mesure}
                 </Typography>
                 <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
                   {categorie}

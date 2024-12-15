@@ -23,7 +23,7 @@ import { LoadingButton } from '@mui/lab'
 import Facture from 'src/frigo/logic/models/Facture'
 import FactureService from 'src/frigo/logic/services/FactureService'
 import AddFactureDrawer from 'src/frigo/views/factures/AddFactureDrawer'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, TextField } from '@mui/material'
 import FactureDetail from 'src/frigo/logic/models/FactureDetail'
 import TableHeaderDetail from 'src/frigo/views/factures/TableHeaderDetail'
 import ProduitService from 'src/frigo/logic/services/ProduitService'
@@ -62,11 +62,17 @@ const styles: Styles = {
     borderCollapse: 'collapse'
   },
   '.description': {
-    width: '180px',
+    width: '150px',
     maxWidth: '180px',
     textAlign: 'justify'
   },
-  '.quantity': {
+  '.Kg': {
+    width: '50px',
+    maxWidth: '50px',
+    wordBreak: 'break-all',
+    textAlign: 'center'
+  },
+  '.Crt': {
     width: '50px',
     maxWidth: '50px',
     wordBreak: 'break-all',
@@ -94,8 +100,8 @@ const styles: Styles = {
     alignContent: 'center'
   },
   '.ticket': {
-    width: '300px',
-    maxWidth: '300px'
+    width: '400px',
+    maxWidth: '400px'
   },
   img: {
     maxWidth: 'inherit',
@@ -154,6 +160,8 @@ const FactureList = () => {
         setOpenNotification(true)
         setTypeMessage('success')
         setMessage('Facture réglée avec succès')
+
+        window.location.reload();
       } else {
         setSendPayement(false)
         setOpenNotification(true)
@@ -720,7 +728,7 @@ const FactureList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellTypeFacture) => {
-          const { produit } = row
+          const { produit, mesure } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -733,7 +741,7 @@ const FactureList = () => {
                     color: 'secondary.main'
                   }}
                 >
-                  {produit}
+                  {produit} {mesure}
                 </Typography>
               </Box>
             </Box>
@@ -976,15 +984,17 @@ const FactureList = () => {
     const rows = facturesDetailsPrint
       ?.map(
         (facturesDetp) => `
-        <div class="details-row">
-          <span>${facturesDetp.qte}</span>
-          <span>${facturesDetp.produit}</span>
-          <span>${facturesDetp.pv.toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')} F</span>
-        </div>
+        <tr class="details-row">
+          <td class="kilo">${facturesDetp.mesure === 'Kg' ? facturesDetp.qte : ''}</td>
+          <td class="cts">${facturesDetp.mesure === 'Crt' ? facturesDetp.qte : ''}</td>
+          <td class="description">${facturesDetp.produit}</td>
+          <td class="pu">${facturesDetp.pv.toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')}</td>
+          <td class="montant">${(facturesDetp.qte * facturesDetp.pv).toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')}</td>
+        </tr>
       `
       )
       .join('');
-  
+
     const receiptContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -994,68 +1004,84 @@ const FactureList = () => {
           <title>Reçu</title>
           <style>
               body {
-                  font-family: 'Arial', sans-serif;
+                  font-family: Arial, sans-serif;
                   font-size: 12px;
                   margin: 0;
                   padding: 0;
+                  line-height: 1;
+                  background-color: #f4f4f4;
               }
-  
+
               .receipt {
-                  width: 240px; /* Adapté aux imprimantes thermiques */
-                  padding: 10px;
+                  width: 300px;
+                  margin: 20px auto;
+                  padding: 15px;
+                  background-color: #fff;
+                  border: 1px solid #ddd;
+                  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
               }
-  
+
               .receipt-header {
                   text-align: center;
-                  margin-bottom: 10px;
+                  margin-bottom: 20px;
               }
-  
+
               .receipt-header h1 {
-                  font-size: 14px;
+                  font-size: 16px;
                   margin: 0;
+                  color: #333;
               }
-  
+
               .receipt-header p {
                   margin: 2px 0;
+                  font-size: 12px;
+                  color: #555;
               }
-  
-              .receipt-details {
-                  border-top: 1px dashed #000;
-                  border-bottom: 1px dashed #000;
-                  margin: 10px 0;
-                  padding: 10px 0;
-              }
-  
-              .details-row {
-                  display: flex;
-                  justify-content: space-between;
-              }
-  
-              .details-row span:nth-child(2) {
-                  flex: 2;
-                  text-align: left;
-                  margin-left: 20px;
-              }
-  
-              .details-header span {
-                  font-weight: bold;
-              }
-  
-              .total {
+
+              .details-row,
+              .details-header {
                   text-align: center;
-                  font-weight: bold;
-                  font-size: 14px;
               }
-  
-              .footer {
-                  text-align: center;
+
+              table {
+                  width: 100%;
+                  border-collapse: collapse;
                   margin-top: 10px;
               }
-  
-              .date {
-                  text-align: right;
+
+              th, td {
+                  padding: 5px;
+                  text-align: center;
+                  border: 1px solid #ddd;
               }
-  
+
+              th {
+                  font-weight: bold;
+                  background-color: #f9f9f9;
+              }
+
+              td.description {
+                  text-align: left;
+              }
+
+              .total {
+                  font-weight: bold;
+                  margin-top: 15px;
+                  font-size: 14px;
+                  text-align: center;
+              }
+
+              .footer {
+                  text-align: center;
+                  font-size: 11px;
+                  margin-top: 15px;
+                  color: #777;
+              }
+
+              .footer span {
+                  display: block;
+                  margin-top: 5px;
+              }
           </style>
       </head>
       <body>
@@ -1066,32 +1092,37 @@ const FactureList = () => {
                   <p>Tel : (+228) 90 19 71 38</p>
               </div>
               <div class="details-row">
-                  <span style="font-weight: bold">${facturesDetailsPrint[0].codeFacture}</span>
+                  <span style="font-weight: bold">${facturesDetailsPrint[0]?.codeFacture}</span>
               </div>
               <div class="details-row" style="margin-top:5px">
                   <span class="date">${facturesDetailsPrint[0].dateFacture.slice(0, -5).replace(/T/g, " ")}</span>
                   <span>${facturesDetailsPrint[0].statut === 'Payée' ? `client : ${facturesDetailsPrint[0].client}` : ``}</span>
               </div>
-              <div class="receipt-details">
-                  <div class="details-row details-header">
-                      <span>Qte</span>
-                      <span>Description</span>
-                      <span>PV</span>
-                  </div>
-                  ${rows}
-              </div>
+              <table class="receipt-details">
+                  <thead>
+                      <tr class="details-header">
+                          <th>Kilo</th>
+                          <th>Cts</th>
+                          <th>Description</th>
+                          <th>P.U</th>
+                          <th>Montant</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${rows}
+                  </tbody>
+              </table>
               <div class="total">
-                  TOTAL (XOF) : ${
-                    facturesDetailsPrint
-                      ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                  } F <br/><br/>
+                  TOTAL : ${facturesDetailsPrint
+        ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      } F <br/><br/>
                   ${facturesDetailsPrint[0].statut === 'Payée' ? `PAYEE CASH` : ``}
               </div>
               <div class="footer">
-                  <span>${facturesDetailsPrint[0].statut != 'Payée' ? `BON DE COMMANDE` : ``}</span>
-                  Les produits vendus ne sont ni repris ni echanges pour des raisons sanitaires. 
+                  <span>${facturesDetailsPrint[0].statut !== 'Payée' ? `BON DE COMMANDE` : ``}</span>
+                  <span>Les produits vendus ne sont ni repris ni échangés pour des raisons sanitaires.</span>
               </div>
           </div>
           <script>
@@ -1102,13 +1133,14 @@ const FactureList = () => {
       </body>
       </html>
     `;
-  
+
     const printWindow = window.open('', '_blank', 'width=400,height=600');
     printWindow?.document.open();
     printWindow?.document.write(receiptContent);
     printWindow?.document.close();
     printWindow?.print();
   };
+
 
   const handlePrint = () => {
     // Masquer les éléments que vous ne souhaitez pas imprimer
@@ -1211,18 +1243,96 @@ const FactureList = () => {
     toggleAddFactureDetailDrawer()
   }
 
+  const [codeFacture, setCodeFacture] = useState('');
+  const [dateValue, setDateValue] = useState('');
+
+  const handleFilterCodeFacture = (newValue:string) => {
+    setCodeFacture(newValue);
+  };
+
+  const handleDateFilter = (newDateValue: string) => {
+    setDateValue(newDateValue);
+  };
+
+  // Fonction pour lancer la recherche
+  const handleSearch = () => {
+    // Ici, tu peux ajouter la logique pour effectuer la recherche
+    console.log('Recherche lancée');
+    console.log('Code facture:', codeFacture);
+    console.log('Date:', dateValue);
+    
+  };
+
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
+          <Typography variant="h5" sx={{ py: 2, px: 6 }}>
+            Recherche et filtre des factures
+          </Typography>
+          <Box
+            sx={{
+              py: 4,
+              px: 6,
+              rowGap: 2,
+              columnGap: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'right',
+              justifyContent: 'end'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+              <TextField
+                label='Code facture'
+                size='small'
+                color='primary'
+                type='text'
+                value={codeFacture}
+                onChange={e => handleFilterCodeFacture(e.target.value)}
+                sx={{ width: 200 }}
+              />
+            </Box>
+
+            {/* Champ de sélection de date */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+              <TextField
+                label='Date facture'
+                size='small'
+                color='primary'
+                type='date'
+                value={dateValue}
+                onChange={e => handleDateFilter(e.target.value)}
+                sx={{ width: 150 }} 
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
+            </Box>
+
+            {/* Bouton de recherche */}
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={()=>handleSearch()}
+                sx={{ height: 40 }}
+              >
+                Rechercher
+              </Button>
+            </Box>
+          </Box>
+          <hr />
           <TableHeader
             value={value}
             handleFilter={handleFilter}
             onReload={() => {
-              setValue('')
-              handleChange()
+              setValue('');
+              handleChange();
+              setPaginationModel({page:0, pageSize:10})
             }}
           />
+
           <DataGrid
             autoHeight
             loading={statusFactures}
@@ -1303,7 +1413,6 @@ const FactureList = () => {
         {/* Print Facture Modal */}
         {/* <PrintReceiptDialog open={openPrint} closeDialog={handleClosePrint} codeFact={code} totalFacture={totalFacture} /> */}
 
-        {/*  */}
         <Dialog
           open={openPrint}
           disableEscapeKeyDown
@@ -1336,14 +1445,20 @@ const FactureList = () => {
               <table style={styles['td, th, tr, table']}>
                 <thead>
                   <tr>
-                    <th className='quantity' style={styles['.quantity']}>
-                      Qte
+                    <th className='Kg' style={styles['.Kg']}>
+                      Kilo
+                    </th>
+                    <th className='Crt' style={styles['.Crt']}>
+                      Cts
                     </th>
                     <th className='description' style={styles['.description']}>
                       Description
                     </th>
                     <th className='price' style={styles['.price']}>
-                      PV
+                      P.U
+                    </th>
+                    <th className='price' style={styles['.price']}>
+                      MONTANT
                     </th>
                   </tr>
                 </thead>
@@ -1351,14 +1466,20 @@ const FactureList = () => {
                   {!statusFactureDetailPrint ? (
                     facturesDetailsPrint?.map(facturesDetp => (
                       <tr key={facturesDetp.id}>
-                        <td className='quantity' style={styles['.quantity']}>
-                          {facturesDetp.qte}
+                        <td className='Kg' style={styles['.Kg']}>
+                          {facturesDetp.mesure === 'Kg' ? facturesDetp.qte * 1.00 : '-'}
+                        </td>
+                        <td className='Crt' style={styles['.Crt']}>
+                          {facturesDetp.mesure === 'Crt' ? facturesDetp.qte * 1.00 : '-'}
                         </td>
                         <td className='description' style={styles['.description']}>
                           {facturesDetp.produit}
                         </td>
                         <td className='price' style={styles['.price']}>
-                          {facturesDetp.pv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} F
+                          {facturesDetp.pv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}
+                        </td>
+                        <td className='price' style={styles['.price']}>
+                          {(facturesDetp.pv * facturesDetp.qte).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}
                         </td>
                       </tr>
                     ))
@@ -1367,12 +1488,15 @@ const FactureList = () => {
                   )}
 
                   <tr>
-                    <td className='quantity' style={styles['.quantity']}></td>
+                    <td className='Kg' style={styles['.Kg']}></td>
+                    <td className='Crt' style={styles['.Crt']}></td>
                     <td className='description' style={styles['.colTotal']}>
-                      TOTAL (XOF) :{' '}
+                      TOTAL :{' '}
                     </td>
                     <td className='price' style={styles['.total']}>
                       {totalFacture.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} F
+                    </td>
+                    <td className='price' style={styles['.total']}>
                     </td>
                   </tr>
                 </tbody>

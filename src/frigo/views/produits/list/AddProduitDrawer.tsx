@@ -18,13 +18,12 @@ import SaveIcon from '@mui/icons-material/Save';
 import { MenuItem, TextField } from '@mui/material'
 import Produit from 'src/frigo/logic/models/Produit'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import Model from 'src/frigo/logic/models/Model'
-import Fournisseur from 'src/frigo/logic/models/Fournisseur'
 
 interface ProduitData {
   id?: number
   code: string
   name: string
+  mesure: string
   categorie: string
   pv: number
   stock_min: number
@@ -70,13 +69,25 @@ const schema = yup.object().shape({
       }
     })
     .required(),
+  mesure: yup
+    .string()
+    .min(1, obj => {
+      if (obj.value.length === 0) {
+        return 'Le champ mesure est obligatoire'
+      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
+        return 'Mesure invalide'
+      } else {
+        return ''
+      }
+    })
+    .required(),
   categorie: yup
     .string()
     .min(3, obj => {
       if (obj.value.length === 0) {
-        return 'Le champ description est obligatoire'
+        return 'Le champ categorie est obligatoire'
       } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return 'Description invalide'
+        return 'Categorie invalide'
       } else {
         return ''
       }
@@ -89,6 +100,7 @@ const schema = yup.object().shape({
 const defaultValues = {
   code: '',
   name: '',
+  mesure: '',
   categorie: '',
   pv: 0,
   stock_min: 0,
@@ -124,6 +136,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
     const sendData = {
       code: data.code,
       name: data.name,
+      mesure: data.mesure,
       categorie: data.categorie,
       pv: Number(data.pv),
       stock_min: Number(data.stock_min)
@@ -177,6 +190,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
     reset({
       code: currentProduit !== null ? currentProduit?.code : '',
       name: currentProduit !== null ? currentProduit?.name : '',
+      mesure: currentProduit !== null ? currentProduit?.mesure : '',
       categorie: currentProduit !== null ? currentProduit?.categorie : '',
       pv: (currentProduit && currentProduit?.pv !== undefined) ? currentProduit.pv : 0,
       stock_min: (currentProduit && currentProduit?.stock_min !== undefined) ? currentProduit.stock_min : 0,
@@ -246,6 +260,26 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
             )}
           />
           <Controller
+            name='mesure'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <CustomTextField
+                select
+                fullWidth
+                sx={{ mb: 6 }}
+                label='Mesure'
+                error={Boolean(errors.mesure)}
+                {...(errors.mesure && { helperText: errors.mesure.message })}
+                SelectProps={{ value: value, onChange: e => onChange(e) }}
+              >
+                <MenuItem value={``}>Selectionnez une mesure</MenuItem>
+                <MenuItem value={`Kg`}>Kilogramme</MenuItem>
+                <MenuItem value={`Crt`}>Carton</MenuItem>
+              </CustomTextField>
+            )}
+          />
+          <Controller
             name='categorie'
             control={control}
             rules={{ required: true }}
@@ -254,7 +288,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
                 select
                 fullWidth
                 sx={{ mb: 6 }}
-                label='Profil'
+                label='Categorie'
                 error={Boolean(errors.categorie)}
                 {...(errors.categorie && { helperText: errors.categorie.message })}
                 SelectProps={{ value: value, onChange: e => onChange(e) }}

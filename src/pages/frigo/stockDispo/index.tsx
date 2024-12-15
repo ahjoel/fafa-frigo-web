@@ -75,7 +75,7 @@ const EntreeR1List = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { produit } = row
+          const { produit, mesure } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -88,7 +88,7 @@ const EntreeR1List = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {produit.toString()}
+                  {produit.toString()} -- {mesure.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -337,13 +337,14 @@ const EntreeR1List = () => {
     const stockMinimal = Number(entreeR1Dispo.stockMinimal)
     const stockDispo = Number(entreeR1Dispo.st_dispo)
 
-    if (stockDispo >= stockMinimal) {
+    if (stockDispo >= stockMinimal && stockDispo > 0) {
       const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
 
       // Créer un nouvel objet pour le produit à ajouter au panier
       const productToCart = {
         productId: entreeR1Dispo.id,
         product: entreeR1Dispo.produit.toString(),
+        mesure: entreeR1Dispo.mesure.toString(),
         categorie: entreeR1Dispo.categorie,
         pv: Number(entreeR1Dispo.pv),
         stockDispo: Number(entreeR1Dispo.st_dispo),

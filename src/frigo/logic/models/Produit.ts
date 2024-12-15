@@ -4,6 +4,7 @@ import MainModel from './MainModel'
 export default class Produit extends MainModel {
   code: string
   name: string
+  mesure: string
   categorie: string
   fournisseur: string
   pv: number
@@ -19,6 +20,7 @@ export default class Produit extends MainModel {
     deletedAt = '',
     code = '',
     name = '',
+    mesure = '',
     categorie = '',
     fournisseur = '',
     pv = 0,
@@ -28,6 +30,7 @@ export default class Produit extends MainModel {
 
     this.code = code
     this.name = name
+    this.mesure = mesure
     this.categorie = categorie
     this.fournisseur = fournisseur
     this.pv = pv
