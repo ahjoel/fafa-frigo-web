@@ -1255,11 +1255,30 @@ const FactureList = () => {
   };
 
   // Fonction pour lancer la recherche
-  const handleSearch = () => {
+  const handleSearchFacture = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
     console.log('Recherche lancée');
     console.log('Code facture:', codeFacture);
     console.log('Date:', dateValue);
+
+    if (codeFacture || dateValue) {
+      setStatusFactures(true)
+      const res = await factureService.listGeneralFactureSearch({ code: codeFacture, date: dateValue })
+  
+      if (res.success) {
+        setStatusFactures(false)
+        const filte = (res.data as Facture[])
+        setFactures(filte)
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage('Une erreur est survenue lors de la recherche.')
+      }
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Remplissez au moins un champs de recherche.')
+    }
     
   };
 
@@ -1315,7 +1334,7 @@ const FactureList = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={()=>handleSearch()}
+                onClick={()=>handleSearchFacture()}
                 sx={{ height: 40 }}
               >
                 Rechercher
@@ -1328,6 +1347,8 @@ const FactureList = () => {
             handleFilter={handleFilter}
             onReload={() => {
               setValue('');
+              setCodeFacture('');
+              setDateValue('');
               handleChange();
               setPaginationModel({page:0, pageSize:10})
             }}

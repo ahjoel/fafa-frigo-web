@@ -1389,6 +1389,40 @@ export default class MainService {
     return result
   }
 
+  async listGeneralFactureSearch(object: any = { code: '', date: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/search?codeFact=${object.code}&dateFact=${object.date}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue lors de la recherche.'
+    }
+
+    return result
+  }
+
   async listFactureDetailRC(object: any = { code: 'null' }) {
     const result = {
       success: false,
