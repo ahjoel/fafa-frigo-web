@@ -1257,9 +1257,6 @@ const FactureList = () => {
   // Fonction pour lancer la recherche
   const handleSearchFacture = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
-    console.log('Recherche lancée');
-    console.log('Code facture:', codeFacture);
-    console.log('Date:', dateValue);
 
     if (codeFacture || dateValue) {
       setStatusFactures(true)
