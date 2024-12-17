@@ -54,9 +54,17 @@ const navigation = (): VerticalNavItemsType => {
         path: "/frigo/factureEnCours",
       },
       {
-        title: `Liste factures`,
+        title: `Liste factures generales`,
         path: "/frigo/factures/list",
       },
+      {
+        title: `Liste factures gros`,
+        path: "/frigo/factures/gros",
+      },
+      {
+        title: `Liste factures details`,
+        path: "/frigo/factures/details",
+      }
     ],
   };
 

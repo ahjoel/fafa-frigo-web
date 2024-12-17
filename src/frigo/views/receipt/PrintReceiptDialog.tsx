@@ -172,7 +172,7 @@ const PrintReceiptDialog = (props: TableReceiptProps) => {
                     <td className='description' style={styles['.description']}>
                       {facturesDetp.produit}
                       {''}
-                      {facturesDetp.modele}
+                      {facturesDetp.mesure}
                     </td>
                     <td className='price' style={styles['.price']}>
                       {facturesDetp.pv}

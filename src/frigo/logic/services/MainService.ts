@@ -1282,7 +1282,7 @@ export default class MainService {
     return result
   }
 
-  async listReglements(object: any = { page: 1, length: 10 }) {
+  async listReglements() {
     const result = {
       success: false,
       code: -1,
@@ -1293,7 +1293,7 @@ export default class MainService {
     }
 
     try {
-      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+      const response = await axios.get(`${this.url}/all`, {
         headers: {
           ...getHeadersInformation()
         }
@@ -1314,6 +1314,40 @@ export default class MainService {
 
       // Handle general network errors or other exceptions
       result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listReglementSearch(object: any = { code: '', date: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/search?codeFact=${object.code}&dateReg=${object.date}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.reglements
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue lors de la recherche.'
     }
 
     return result
@@ -1401,6 +1435,74 @@ export default class MainService {
 
     try {
       const response = await axios.get(`${this.url}/all/search?codeFact=${object.code}&dateFact=${object.date}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue lors de la recherche.'
+    }
+
+    return result
+  }
+
+  async listGrosFactureSearch(object: any = { code: '', date: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/gros/search?codeFact=${object.code}&dateFact=${object.date}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue lors de la recherche.'
+    }
+
+    return result
+  }
+
+  async listDetailFactureSearch(object: any = { code: '', date: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/detail/search?codeFact=${object.code}&dateFact=${object.date}`, {
         headers: {
           ...getHeadersInformation()
         }
@@ -1585,6 +1687,108 @@ export default class MainService {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.mouvementsEntreeR1Dispo
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listMouvementFactureDetail() {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/facture/detail`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listMouvementFactureGros() {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/facture/gros`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listMouvementFactureEclateDetail() {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/facture/detail`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.factures
       } else {
         result.description = response.data.description
       }

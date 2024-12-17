@@ -1,86 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useCallback } from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
-import Icon from 'src/@core/components/icon'
+import TableHeader from 'src/frigo/views/factures/TableHeader'
 import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
-import Reglement from 'src/frigo/logic/models/Reglement'
-import ReglementService from 'src/frigo/logic/services/ReglementService'
-import TableHeader from 'src/frigo/views/reglements/list/TableHeader'
-import { TextField } from '@mui/material'
+import { CircularProgress, TextField } from '@mui/material'
+import FactureDetail from 'src/frigo/logic/models/FactureDetail'
+import EntreeR1Service from 'src/frigo/logic/services/EntreeService'
+import FactureEclateDetailGros from 'src/frigo/logic/models/FactureEclateDetailGros'
+import FactureService from 'src/frigo/logic/services/FactureService'
 
 interface CellType {
-  row: Reglement
+  row: FactureEclateDetailGros
 }
 
 interface ColumnType {
   [key: string]: any
 }
 
-const ReglementList = () => {
-  const reglementService = new ReglementService()
-  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
-  const profile = userData?.profile
-
-  // Delete Confirmation - State
-  const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
-  const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
-  const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
-
-  const handleDeleteReglement = (reglement: Reglement) => {
-    setCurrentReglement(reglement)
-    setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
-    )
-    setComfirmationFunction(() => () => deleteReglement(reglement))
-    setOpen(true)
-  }
-
-  const deleteReglement = async (reglement: Reglement) => {
-    setSendDelete(true)
-
-    try {
-      const rep = await reglementService.delete(reglement.id)
-
-      if (rep === null) {
-        setSendDelete(false)
-        handleChange()
-        handleClose()
-        setOpenNotification(true)
-        setTypeMessage('success')
-        setMessage('Reglement supprimé avec succes')
-      } else {
-        setSendDelete(false)
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage('Reglement non trouvé')
-      }
-    } catch (error) {
-      console.error('Erreur lors de la suppression :', error)
-      setSendDelete(false)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
-    }
-  }
+const FactureGros = () => {
+  // Search State
+  const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
@@ -94,23 +41,19 @@ const ReglementList = () => {
     setOpenNotification(false)
   }
 
-  const [statusReglements, setStatusReglements] = useState<boolean>(true)
-  const [value, setValue] = useState<string>('')
-  const [reglements, setReglements] = useState<Reglement[]>([])
+  const [statusFactures, setStatusFactures] = useState<boolean>(true)
+  const [factures, setFactures] = useState<FactureEclateDetailGros[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentReglement, setCurrentReglement] = useState<null | Reglement>(null)
-
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleDeleteReglement: (reglement: Reglement) => void) => {
+  const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        width: 200,
-        field: 'createdAt',
+        width: 150,
+        field: 'code',
         renderHeader: () => (
-          <Tooltip title='Date de reglement'>
+          <Tooltip title='Code'>
             <Typography
               noWrap
               sx={{
@@ -120,7 +63,47 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Date reglement
+              Code
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { code } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
+                  }}
+                >
+                  {code}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 250,
+        field: 'createdAt',
+        renderHeader: () => (
+          <Tooltip title='Date Facture'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Date Facture
             </Typography>
           </Tooltip>
         ),
@@ -134,7 +117,9 @@ const ReglementList = () => {
                   noWrap
                   sx={{
                     fontWeight: 500,
-                    textDecoration: 'none'
+                    textDecoration: 'none',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
                   {createdAt.slice(0, -5).replace(/T/g, ' ')}
@@ -145,7 +130,7 @@ const ReglementList = () => {
         }
       },
       {
-        width: 200,
+        width: 150,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -173,10 +158,12 @@ const ReglementList = () => {
                   sx={{
                     fontWeight: 500,
                     textDecoration: 'none',
-                    color: 'primary.main'
+                    color: 'primary.main',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
-                  {client}
+                  {client.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -184,10 +171,10 @@ const ReglementList = () => {
         }
       },
       {
-        width: 200,
-        field: 'codeFacture',
+        width: 250,
+        field: 'produit',
         renderHeader: () => (
-          <Tooltip title='Code Facture'>
+          <Tooltip title='Produit'>
             <Typography
               noWrap
               sx={{
@@ -197,51 +184,12 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Code Facture
+              Produit
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { codeFacture } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {codeFacture}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 150,
-        field: 'total',
-        renderHeader: () => (
-          <Tooltip title='Total Facture'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Total Facture
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { totalFacture } = row
+          const { produit, mesure } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -255,7 +203,7 @@ const ReglementList = () => {
                     textAlign: 'center'
                   }}
                 >
-                  {totalFacture}
+                  {produit}  {mesure}
                 </Typography>
               </Box>
             </Box>
@@ -264,9 +212,9 @@ const ReglementList = () => {
       },
       {
         width: 200,
-        field: 'auteur',
+        field: 'categorie',
         renderHeader: () => (
-          <Tooltip title='Auteur'>
+          <Tooltip title='Categorie'>
             <Typography
               noWrap
               sx={{
@@ -276,12 +224,12 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Auteur
+              Categorie
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { firstname, lastname } = row
+          const { categorie } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -294,7 +242,7 @@ const ReglementList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {firstname} {''} {lastname}
+                  {categorie}
                 </Typography>
               </Box>
             </Box>
@@ -302,11 +250,10 @@ const ReglementList = () => {
         }
       },
       {
-        width: 200,
-        sortable: false,
-        field: 'actions',
+        width: 100,
+        field: 'qte',
         renderHeader: () => (
-          <Tooltip title={t('Actions')}>
+          <Tooltip title='Quantite'>
             <Typography
               noWrap
               sx={{
@@ -316,37 +263,69 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              {t('Actions')}
+              Quantite
             </Typography>
           </Tooltip>
         ),
-        renderCell: ({ row }: CellType) => (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
-              <Tooltip title='Supprimer le règlement'>
-                <IconButton
-                  size='small'
-                  sx={{ color: 'text.primary' }}
-                  onClick={() => {
-                    {
-                      handleDeleteReglement(row)
-                    }
+        renderCell: ({ row }: CellType) => {
+          const { qte } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
                   }}
                 >
-                  <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
-                    <Icon icon='tabler:trash' />
-                  </Box>
-                </IconButton>
-              </Tooltip>
-            )}
-          </Box>
-        )
+                  {qte}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 150,
+        field: 'pv',
+        renderHeader: () => (
+          <Tooltip title='Prix de vente'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Prix de vente
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { pv } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {pv}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
       }
     ]
 
@@ -354,24 +333,24 @@ const ReglementList = () => {
   }
 
   // Axios call to loading Data
-  const getListReglements = async () => {
-    const result = await reglementService.listReglements()
+  const entreeR1Service = new EntreeR1Service()
+  const getListFactures = async () => {
+    const result = await entreeR1Service.listMouvementFactureEclateDetail()
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
-      const filteredData = (result.data as Reglement[]).filter(reglement => {
+      const filteredData = (result.data as FactureEclateDetailGros[]).filter(facture => {
         return (
-          reglement.codeFacture.toString().toLowerCase().includes(queryLowered) ||
-          reglement.createdAt.toLowerCase().includes(queryLowered) ||
-          reglement.client.toString().toLowerCase().includes(queryLowered) ||
-          reglement.totalFacture.toString().toLowerCase().includes(queryLowered) ||
-          reglement.firstname.toLowerCase().includes(queryLowered) ||
-          reglement.lastname.toLowerCase().includes(queryLowered)
+          facture.code.toString().toLowerCase().includes(queryLowered) ||
+          facture.createdAt.toLowerCase().includes(queryLowered) ||
+          facture.client.toString().toLowerCase().includes(queryLowered) ||
+          facture.produit.toLowerCase().includes(queryLowered) ||
+          facture.pv.toString().toLowerCase().includes(queryLowered) 
         )
       })
 
-      setReglements(filteredData)
-      setStatusReglements(false)
+      setFactures(filteredData)
+      setStatusFactures(false)
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
@@ -380,13 +359,13 @@ const ReglementList = () => {
   }
 
   const handleChange = async () => {
-    getListReglements()
+    getListFactures()
   }
 
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
-    setColumns(getColumns(handleDeleteReglement))
+    setColumns(getColumns())
   }, [value])
 
   const handleFilter = useCallback((val: string) => {
@@ -396,7 +375,7 @@ const ReglementList = () => {
   const [codeFacture, setCodeFacture] = useState('');
   const [dateValue, setDateValue] = useState('');
 
-  const handleFilterCodeFacture = (newValue: string) => {
+  const handleFilterCodeFacture = (newValue:string) => {
     setCodeFacture(newValue);
   };
 
@@ -404,17 +383,19 @@ const ReglementList = () => {
     setDateValue(newDateValue);
   };
 
-  const handleSearchReglement = async () => {
+  const factureService = new FactureService();
+  // Fonction pour lancer la recherche
+  const handleSearchFacture = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
 
     if (codeFacture || dateValue) {
-      setStatusReglements(true)
-      const res = await reglementService.listReglementSearch({ code: codeFacture, date: dateValue })
-
+      setStatusFactures(true)
+      const res = await factureService.listGrosFactureSearch({ code: codeFacture, date: dateValue })
+  
       if (res.success) {
-        setStatusReglements(false)
-        const filte = (res.data as Reglement[])
-        setReglements(filte)
+        setStatusFactures(false)
+        const filte = (res.data as FactureEclateDetailGros[])
+        setFactures(filte)
       } else {
         setOpenNotification(true)
         setTypeMessage('error')
@@ -425,16 +406,15 @@ const ReglementList = () => {
       setTypeMessage('error')
       setMessage('Remplissez au moins un champs de recherche.')
     }
-
+    
   };
-
 
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
           <Typography variant="h5" sx={{ py: 2, px: 6 }}>
-            Recherche et filtre des reglements
+            Recherche et filtre des factures en details
           </Typography>
           <Box
             sx={{
@@ -463,13 +443,13 @@ const ReglementList = () => {
             {/* Champ de sélection de date */}
             <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
               <TextField
-                label='Date reglement'
+                label='Date facture'
                 size='small'
                 color='primary'
                 type='date'
                 value={dateValue}
                 onChange={e => handleDateFilter(e.target.value)}
-                sx={{ width: 150 }}
+                sx={{ width: 150 }} 
                 InputLabelProps={{
                   shrink: true
                 }}
@@ -481,7 +461,7 @@ const ReglementList = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleSearchReglement()}
+                onClick={()=>handleSearchFacture()}
                 sx={{ height: 40 }}
               >
                 Rechercher
@@ -493,17 +473,19 @@ const ReglementList = () => {
             value={value}
             handleFilter={handleFilter}
             onReload={() => {
-              setValue('')
-              setCodeFacture('')
-              setDateValue('')
-              handleChange()
+              setValue('');
+              setCodeFacture('');
+              setDateValue('');
+              handleChange();
+              setPaginationModel({page:0, pageSize:10})
             }}
           />
+
           <DataGrid
             autoHeight
-            loading={statusReglements}
+            loading={statusFactures}
             rowHeight={62}
-            rows={reglements as never[]}
+            rows={factures as never[]}
             columns={columns as GridColDef<never>[]}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
@@ -514,6 +496,7 @@ const ReglementList = () => {
           />
         </Card>
       </Grid>
+
 
       {/* Notification */}
       <Snackbar
@@ -531,42 +514,8 @@ const ReglementList = () => {
           {message}
         </Alert>
       </Snackbar>
-
-      {/* Delete Modal Confirmation */}
-      <Dialog
-        open={open}
-        disableEscapeKeyDown
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-        onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
-            handleClose()
-          }
-        }}
-      >
-        <DialogTitle id='alert-dialog-title'>{t('Confirmation')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>{t(comfirmationMessage)}</DialogContentText>
-        </DialogContent>
-        <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose} color='secondary'>
-            {t('Cancel')}
-          </Button>
-          <LoadingButton
-            onClick={() => {
-              comfirmationFunction()
-            }}
-            loading={sendDelete}
-            endIcon={<DeleteIcon />}
-            variant='contained'
-            color='error'
-          >
-            {t('Supprimer')}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
-    </Grid>
+    </Grid>    
   )
 }
 
-export default ReglementList
+export default FactureGros

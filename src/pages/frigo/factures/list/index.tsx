@@ -363,7 +363,7 @@ const FactureList = () => {
         width: 200,
         field: 'createdAt',
         renderHeader: () => (
-          <Tooltip title='Date creation'>
+          <Tooltip title='Date facture'>
             <Typography
               noWrap
               sx={{
@@ -373,7 +373,7 @@ const FactureList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Date creation
+              Date facture
             </Typography>
           </Tooltip>
         ),
@@ -1088,8 +1088,8 @@ const FactureList = () => {
           <div class="receipt">
               <div class="receipt-header">
                   <h1>FAFA-FRIGO</h1>
-                  <p>Adetikopé</p>
-                  <p>Tel : (+228) 90 19 71 38</p>
+                  <p>Adétikopé en face de l'Hôtel Amoukadi</p>
+                  <p>Tel : (+228) 92 65 47 84</p>
               </div>
               <div class="details-row">
                   <span style="font-weight: bold">${facturesDetailsPrint[0]?.codeFacture}</span>
@@ -1284,7 +1284,7 @@ const FactureList = () => {
       <Grid item xs={12}>
         <Card>
           <Typography variant="h5" sx={{ py: 2, px: 6 }}>
-            Recherche et filtre des factures
+            Recherche et filtre des factures generales
           </Typography>
           <Box
             sx={{
@@ -1448,9 +1448,9 @@ const FactureList = () => {
               <p className='centered' style={styles['.centered']}>
                 FAFA-FRIGO
                 <br />
-                Adetikope
+                Adétikopé en face de l'Hôtel Amoukadi
                 <br />
-                Tel : (+228) 90 19 71 38
+                Tel : (+228) 92 65 47 84
               </p>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <p style={{ margin: 0 }}>
