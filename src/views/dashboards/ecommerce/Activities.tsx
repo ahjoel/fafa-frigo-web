@@ -23,9 +23,9 @@ import { Alert, AlertColor, Snackbar } from '@mui/material'
 
 const Activities = () => {
   let infoTranslate
-  const [productCount, setProductCount] = useState<string>('')
-  const [productCountRC, setProductCountRC] = useState<string>('')
-  const [reglementMoisCount, setReglementMoisCount] = useState<string>('')
+  const [productCountKg, setProductCountKg] = useState<string>('')
+  const [productCountCrt, setProductCountCrt] = useState<string>('')
+  const [factureCount, setFactureCount] = useState<string>('')
   const [reglementDayCount, setReglementDayCount] = useState<string>('')
 
   // const [factureImpayee, setFactureImpayee] = useState<string>('')
@@ -52,95 +52,22 @@ const Activities = () => {
       })
 
       if (response.data.data) {
-        setProductCount(response.data.data.produitNumber)
+        setProductCountKg(response.data.data.produitNumberKg)
+        setProductCountCrt(response.data.data.produitNumberCrt)
+        setFactureCount(response.data.data.factureNumbers)
+        setReglementDayCount(response.data.data.reglementNumbers)
       }
     } catch (error) {
       console.error('Error submitting form:', error)
       setOpenNotification(true)
       setTypeMessage('error')
-      infoTranslate = t('An error has occured1')
+      infoTranslate = t('An error has occured')
       setMessage(infoTranslate)
     }
-
-    try {
-      const response = await axios.get(`produits/count/rc`, {
-        headers: {
-          ...getHeadersInformation(),
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (response.data.data) {
-        setProductCountRC(response.data.data.produitNumber)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      infoTranslate = t('An error has occured1')
-      setMessage(infoTranslate)
-    }
-
-    try {
-      const response = await axios.get(`reglements/month/count`, {
-        headers: {
-          ...getHeadersInformation(),
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (response.data.data) {
-        setReglementMoisCount(response.data.data.reglementMonthTotalNumber)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      infoTranslate = t('An error has occured2')
-      setMessage(infoTranslate)
-    }
-
-    try {
-      const response = await axios.get(`reglements/day/count`, {
-        headers: {
-          ...getHeadersInformation(),
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (response.data.data) {
-        setReglementDayCount(response.data.data.reglementDayTotalNumber)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      infoTranslate = t('An error has occured3')
-      setMessage(infoTranslate)
-    }
-
-    // try {
-    //   const response = await axios.get(`factures/impayee/count`, {
-    //     headers: {
-    //       ...getHeadersInformation(),
-    //       'Content-Type': 'application/json'
-    //     }
-    //   })
-
-    //   if (response.data.data) {
-    //     setFactureImpayee(response.data.data.factureTotalImpayeeNumber)
-    //   }
-    // } catch (error) {
-    //   console.error('Error submitting form:', error)
-    //   setOpenNotification(true)
-    //   setTypeMessage('error')
-    //   infoTranslate = t('An error has occured4')
-    //   setMessage(infoTranslate)
-    // }
   }
 
   useEffect(() => {
-    // handleLoadData()
+    handleLoadData()
   }, [])
 
   return (
@@ -154,8 +81,8 @@ const Activities = () => {
                 <Icon icon='tabler:affiliate' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{productCount}</Typography>
-                <Typography variant='body2'>{t('Produits R1')}</Typography>
+                <Typography variant='h6'>{productCountKg}</Typography>
+                <Typography variant='body2'>Produits Details</Typography>
               </Box>
             </Box>
           </Grid>
@@ -165,19 +92,19 @@ const Activities = () => {
                 <Icon icon='tabler:affiliate' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{productCountRC}</Typography>
-                <Typography variant='body2'>{t('Produits RC')}</Typography>
+                <Typography variant='h6'>{productCountCrt}</Typography>
+                <Typography variant='body2'>Produits Gros</Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='error' sx={{ mr: 4, width: 42, height: 42 }}>
-                <Icon icon='tabler:wallet' />
+                <Icon icon='tabler:clipboard-text' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{reglementMoisCount || 0}</Typography>
-                <Typography variant='body2'>{t('Reg du Mois')}</Typography>
+                <Typography variant='h6'>{factureCount || 0}</Typography>
+                <Typography variant='body2'>{t('Fact du Jour')}</Typography>
               </Box>
             </Box>
           </Grid>

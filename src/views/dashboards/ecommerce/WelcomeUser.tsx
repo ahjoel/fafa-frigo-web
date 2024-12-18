@@ -27,7 +27,7 @@ const WelcomeUser = () => {
   return (
     <Card sx={{ position: 'relative' }}>
       <CardContent>
-        <Typography variant='h4' sx={{ mb: 0.2 }}>
+        <Typography variant='h4' sx={{ mb: 0.4 }}>
           {t('Bienvenue')}{' '}
           <span
             style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '20px', width: '100px', maxWidth: '100%' }}
@@ -36,22 +36,18 @@ const WelcomeUser = () => {
           </span>{' '}
           🎉
         </Typography>
-        <Typography sx={{ mb: 1, color: 'text.secondary' }}>{t('Commencez à consulter...')}</Typography>
+        <Typography sx={{ mb: 3, color: 'text.secondary' }}>{t('Commencez à consulter...')}</Typography>
         <br />
-        {profile === 'FACTURIER-R1' ? (
-          <Button variant='contained' onClick={() => router.push('/frigo/stockDispoR1/list')}>
-            {t('Stock R1 Disponible')}
-          </Button>
-        ) : profile === 'FACTURIER-RC' ? (
-          <Button variant='contained' onClick={() => router.push('/frigo/rc/stockDispoRC/list')}>
-            {t('Stock RC Disponible')}
+        {profile === 'FACTURIER' ? (
+          <Button variant='contained' onClick={() => router.push('/frigo/stockDispo')}>
+            {t('Stock Disponible')}
           </Button>
         ) : (
           <Button variant='contained' size='small' sx={{ '&:hover': { backgroundColor: '#2a3645' } }} onClick={() => router.push('/frigo/factures/list')}>
             {t('Liste des factures')}
           </Button>
         )}
-        <Illustration width={95} alt='bars_icon' src='/images/bar.png' />
+        <Illustration width={95} alt='bars_icon' src='/images/surgeles.jpg' />
       </CardContent>
     </Card>
   )

@@ -1117,8 +1117,7 @@ const FactureList = () => {
         ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-      } F <br/><br/>
-                  ${facturesDetailsPrint[0].statut === 'Payée' ? `PAYEE CASH` : ``}
+      } F <br/>
               </div>
               <div class="footer">
                   <span>${facturesDetailsPrint[0].statut !== 'Payée' ? `BON DE COMMANDE` : ``}</span>
