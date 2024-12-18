@@ -1597,6 +1597,40 @@ export default class MainService {
     return result
   }
 
+  async listEntreeSearch(object: any = { date: '' }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/search?dateEnt=${object.date}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.mouvementsEntree
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue lors de la recherche.'
+    }
+
+    return result
+  }
+
   async listEntrees() {
     const result = {
       success: false,

@@ -240,7 +240,7 @@ const EntreeList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { produit } = row;
+          const { produit, mesure } = row;
 
           return (
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -259,7 +259,7 @@ const EntreeList = () => {
                     color: "primary.main",
                   }}
                 >
-                  {produit.toString()}
+                  {produit.toString()} {mesure}
                 </Typography>
               </Box>
             </Box>
@@ -485,7 +485,7 @@ const EntreeList = () => {
     setStatusEntree(true);
     const queryLowered = value.toLowerCase();
 
-    console.log('value of search', queryLowered);
+    // console.log('value of search', queryLowered);
     
     // Recherche dans les données locales uniquement si elles sont chargées
     if (entreesR1.length > 0) {
@@ -497,6 +497,7 @@ const EntreeList = () => {
           (entree.produit &&
             entree.produit.toString().toLowerCase().includes(queryLowered)) ||
           entree.model.toString().toLowerCase().includes(queryLowered) ||
+          entree.mesure.toString().toLowerCase().includes(queryLowered) ||
           (entree.fournisseur &&
             entree.fournisseur
               .toString()
@@ -505,7 +506,7 @@ const EntreeList = () => {
           entree.qte.toString().toLowerCase().includes(queryLowered)
         );
       });
-      console.log('value of length filteredData', filteredData.length);
+      // console.log('value of length filteredData', filteredData.length);
 
       if (filteredData.length > 0) {
         setEntreesR1(filteredData);
@@ -581,10 +582,85 @@ const EntreeList = () => {
     toggleAddEntreeDrawer();
   };
 
+  const [dateValue, setDateValue] = useState('');
+
+  const handleDateFilter = (newDateValue: string) => {
+    setDateValue(newDateValue);
+  };
+  
+  const handleSearchEntree = async () => {
+    // Ici, tu peux ajouter la logique pour effectuer la recherche
+
+    if (dateValue) {
+      setStatusEntree(true)
+      const res = await entreeService.listEntreeSearch({ date: dateValue })
+
+      if (res.success) {
+        setStatusEntree(false)
+        const filte = (res.data as Entree[])
+        setEntreesR1(filte)
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage('Une erreur est survenue lors de la recherche.')
+      }
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Remplissez au moins un champs de recherche.')
+    }
+
+  };
+
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
+        <Typography variant="h5" sx={{ py: 2, px: 6 }}>
+            Recherche et filtre Stock Entree
+          </Typography>
+          <Box
+            sx={{
+              py: 4,
+              px: 6,
+              rowGap: 2,
+              columnGap: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'right',
+              justifyContent: 'end'
+            }}
+          >
+
+            {/* Champ de sélection de date */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+              <TextField
+                label='Date entree'
+                size='small'
+                color='primary'
+                type='date'
+                value={dateValue}
+                onChange={e => handleDateFilter(e.target.value)}
+                sx={{ width: 150 }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
+            </Box>
+
+            {/* Bouton de recherche */}
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSearchEntree()}
+                sx={{ height: 40 }}
+              >
+                Rechercher
+              </Button>
+            </Box>
+          </Box>
+          <hr />
           <TableHeader
             value={value}
             handleFilter={handleFilter}
@@ -592,6 +668,7 @@ const EntreeList = () => {
             toggle={handleCreateEntree}
             onReload={() => {
               setValue("");
+              setDateValue("");
               handleChange();
               handleLoadingProduits();
               handleLoadingFournisseurs();

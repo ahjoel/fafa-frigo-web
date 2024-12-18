@@ -7,6 +7,7 @@ export default class Entree extends MainModel {
   produit: Produit | string
   produitId: number
   model: string
+  mesure: string
   fournisseur: Fournisseur | string
   fournisseurId: number
   stock: string
@@ -24,6 +25,7 @@ export default class Entree extends MainModel {
     produit = new Produit(),
     produitId = 0,
     model = '',
+    mesure = '',
     fournisseur = new Fournisseur(),
     fournisseurId = 0,
     stock = '',
@@ -35,6 +37,7 @@ export default class Entree extends MainModel {
     this.produit = produit
     this.produitId = produitId
     this.model = model
+    this.mesure = mesure
     this.fournisseur = fournisseur
     this.fournisseurId = fournisseurId
     this.stock = stock
