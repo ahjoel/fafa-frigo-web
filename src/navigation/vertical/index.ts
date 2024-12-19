@@ -4,7 +4,9 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 const navigation = (): VerticalNavItemsType => {
   const userProfil = window.localStorage.getItem('profile')
   const adminMode = userProfil === 'ADMINISTRATEUR' ? true : false
-  const facturierMode = userProfil === 'FACTURIER' ? true : false
+  const gerantMode = userProfil === 'GERANT' ? true : false
+  const caissierMode = userProfil === 'CAISSIER' ? true : false
+  const caissierFacturierMode = userProfil === 'CAISSIER-FACTURIER' ? true : false
 
   const Dashboard = {
     title: 'Dashboards',
@@ -106,13 +108,32 @@ const navigation = (): VerticalNavItemsType => {
 
   const navArray: any = [Dashboard]
 
-  // GODE-MODE
+  // ADMIN-MODE
   adminMode && navArray.push(Configuration);
   adminMode && navArray.push(Stock);
   adminMode && navArray.push(Facturation);
   adminMode && navArray.push(Reglements);
   adminMode && navArray.push(Users);
   adminMode && navArray.push(Statistiques);
+
+  // GERANT-MODE
+  gerantMode && navArray.push(Configuration);
+  gerantMode && navArray.push(Stock);
+  gerantMode && navArray.push(Facturation);
+  gerantMode && navArray.push(Reglements);
+  gerantMode && navArray.push(Users);
+  gerantMode && navArray.push(Statistiques);
+
+  // CAISSIER-MODE
+  caissierMode && navArray.push(Facturation.children[1],Facturation.children[2],Facturation.children[3]);
+  caissierMode && navArray.push(Reglements);
+  caissierMode && navArray.push(Statistiques);
+
+  // CAISSIER-FACTURIER-MODE
+  caissierFacturierMode && navArray.push(Stock);
+  caissierFacturierMode && navArray.push(Facturation);
+  caissierFacturierMode && navArray.push(Reglements);
+  caissierFacturierMode && navArray.push(Statistiques);
 
   return navArray
 }

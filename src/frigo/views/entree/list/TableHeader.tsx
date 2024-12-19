@@ -9,12 +9,13 @@ interface TableHeaderProps {
   toggle: () => void
   onReload: () => void
   handleFilter: (val: string) => void
-  handleKeyPress: (e: React.KeyboardEvent) => void
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilter, toggle, value, onReload, handleKeyPress } = props
+  const { handleFilter, toggle, value, onReload } = props
+  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
+  const profile = userData?.profile
 
   return (
     <Box
@@ -37,15 +38,19 @@ const TableHeader = (props: TableHeaderProps) => {
         value={value}
         // onChange={e => handleFilter(e.target.value)}
         onChange={(e) => handleFilter(e.target.value)} // Mise à jour de la valeur
-        onKeyPress={handleKeyPress} // Ajout de l'événement pour la touche "Entrer"
         sx={{ mr: 4 }}
       />
 
       <Box sx={{ display: 'flex', alignItems: 'right' }}>
-        <Button onClick={toggle} size='small' variant='contained' sx={{ height: '38px', '&:hover': { backgroundColor: '#2a3645' } }}>
-          <span style={{ marginRight: '0.1rem' }}>Ajouter un stock</span>
-          <Icon fontSize='1.5rem' icon='tabler:plus' />
-        </Button>
+
+      {(profile === "ADMINISTRATEUR" || profile === "GERANT") && (
+        <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Button onClick={toggle} size='small' variant='contained' sx={{ height: '38px', '&:hover': { backgroundColor: '#2a3645' } }}>
+            <span style={{ marginRight: '0.1rem' }}>Ajouter un stock</span>
+            <Icon fontSize='1.5rem' icon='tabler:plus' />
+          </Button>
+        </Box>
+      )}
 
         <Button
           sx={{ marginLeft: '5px', '&:hover': { backgroundColor: '#2a3645' } }}

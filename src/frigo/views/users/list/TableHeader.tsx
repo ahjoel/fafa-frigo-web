@@ -12,6 +12,8 @@ interface TableHeaderProps {
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
   const { handleFilter, toggle, value } = props
+  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
+  const profile = userData?.profile
 
   return (
     <Box
@@ -36,12 +38,14 @@ const TableHeader = (props: TableHeaderProps) => {
         sx={{ mr: 4 }}
       />
 
-      <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <Button onClick={toggle} variant='contained' sx={{ '& svg': { mr: 2 }, '&:hover': { backgroundColor: '#2a3645' }}} size='small'>
-          <span style={{ marginRight: '0.1rem' }}>Ajouter un utilisateur</span>
-          <Icon fontSize='1.5rem' icon='tabler:plus' />
-        </Button>
-      </Box>
+      {profile === "ADMINISTRATEUR" && (
+        <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Button onClick={toggle} variant='contained' sx={{ '& svg': { mr: 2 }, '&:hover': { backgroundColor: '#2a3645' } }} size='small'>
+            <span style={{ marginRight: '0.1rem' }}>Ajouter un utilisateur</span>
+            <Icon fontSize='1.5rem' icon='tabler:plus' />
+          </Button>
+        </Box>
+      )}
     </Box>
   )
 }

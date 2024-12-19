@@ -34,6 +34,8 @@ interface ColumnType {
 
 const UserList = () => {
   const userService = new UserService()
+  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
+  const profile = userData?.profile
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
@@ -43,10 +45,16 @@ const UserList = () => {
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
 
   const handleDeleteUser = (user: User) => {
-    setCurrentUser(user)
-    setComfirmationMessage('Voulez-vous réellement supprimer ce utilisateur ?')
-    setComfirmationFunction(() => () => deleteUser(user))
-    setOpen(true)
+    if (profile === "ADMINISTRATEUR") {
+      setCurrentUser(user)
+      setComfirmationMessage('Voulez-vous réellement supprimer ce utilisateur ?')
+      setComfirmationFunction(() => () => deleteUser(user))
+      setOpen(true)
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Vous n avez pas le droit de supprimer cet utilisateur')
+    }
   }
 
   const deleteUser = async (user: User) => {

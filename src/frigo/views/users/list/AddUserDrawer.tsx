@@ -306,7 +306,7 @@ const SidebarAddUser = (props: SidebarAddUser) => {
                 <MenuItem value={``}>Selectionnez un profil</MenuItem>
                 <MenuItem value={`ADMINISTRATEUR`}>ADMINISTRATEUR</MenuItem>
                 <MenuItem value={`GERANT`}>GERANT</MenuItem>
-                <MenuItem value={`FACTURIER`}>FACTURIER</MenuItem>
+                <MenuItem value={`CAISSIER-FACTURIER`}>CAISSIER-FACTURIER</MenuItem>
                 <MenuItem value={`CAISSIER`}>CAISSIER</MenuItem>
               </CustomTextField>
             )}

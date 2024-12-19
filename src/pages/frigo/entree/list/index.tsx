@@ -472,25 +472,8 @@ const EntreeList = () => {
     const result = await entreeService.listEntrees();
 
     if (result.success) {
-      setEntreesR1(result.data as Entree[]);
-      setStatusEntree(false);
-    } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
-      setMessage(result.description);
-    }
-  };
-
-  const handleSearchOnListEntrees = async () => {
-    setStatusEntree(true);
-    const queryLowered = value.toLowerCase();
-
-    // console.log('value of search', queryLowered);
-    
-    // Recherche dans les données locales uniquement si elles sont chargées
-    if (entreesR1.length > 0) {
-      console.log('value of length', entreesR1.length);
-      const filteredData = entreesR1.filter((entree) => {
+      const queryLowered = value.toLowerCase();
+      const filteredData = (result.data as Entree[]).filter((entree) => {
         return (
           entree.code.toString().toLowerCase().includes(queryLowered) ||
           entree.createdAt.toString().toLowerCase().includes(queryLowered) ||
@@ -506,20 +489,55 @@ const EntreeList = () => {
           entree.qte.toString().toLowerCase().includes(queryLowered)
         );
       });
-      // console.log('value of length filteredData', filteredData.length);
 
-      if (filteredData.length > 0) {
-        setEntreesR1(filteredData);
-        setStatusEntree(false);
-        return;
-      }else{
-        setStatusEntree(false);
-        setOpenNotification(true);
-        setTypeMessage("info");
-        setMessage('Aucun resultat pour cette recherche');
-      }
+      setEntreesR1(filteredData);
+      setStatusEntree(false);
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(result.description);
     }
   };
+
+  // const handleSearchOnListEntrees = async () => {
+  //   setStatusEntree(true);
+  //   const queryLowered = value.toLowerCase();
+
+  //   // console.log('value of search', queryLowered);
+    
+  //   // Recherche dans les données locales uniquement si elles sont chargées
+  //   if (entreesR1.length > 0) {
+  //     console.log('value of length', entreesR1.length);
+  //     const filteredData = entreesR1.filter((entree) => {
+  //       return (
+  //         entree.code.toString().toLowerCase().includes(queryLowered) ||
+  //         entree.createdAt.toString().toLowerCase().includes(queryLowered) ||
+  //         (entree.produit &&
+  //           entree.produit.toString().toLowerCase().includes(queryLowered)) ||
+  //         entree.model.toString().toLowerCase().includes(queryLowered) ||
+  //         entree.mesure.toString().toLowerCase().includes(queryLowered) ||
+  //         (entree.fournisseur &&
+  //           entree.fournisseur
+  //             .toString()
+  //             .toLowerCase()
+  //             .includes(queryLowered)) ||
+  //         entree.qte.toString().toLowerCase().includes(queryLowered)
+  //       );
+  //     });
+  //     // console.log('value of length filteredData', filteredData.length);
+
+  //     if (filteredData.length > 0) {
+  //       setEntreesR1(filteredData);
+  //       setStatusEntree(false);
+  //       return;
+  //     }else{
+  //       setStatusEntree(false);
+  //       setOpenNotification(true);
+  //       setTypeMessage("info");
+  //       setMessage('Aucun resultat pour cette recherche');
+  //     }
+  //   }
+  // };
 
   const handleLoadingProduits = async () => {
     const result = await produitService.listProduitsLongue();
@@ -555,13 +573,13 @@ const EntreeList = () => {
     handleLoadingProduits();
     handleLoadingFournisseurs();
     setColumns(getColumns(handleUpdateEntree));
-  }, []);
+  }, [value]);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearchOnListEntrees()  // Lance la recherche seulement lorsqu'on appuie sur "Entrer"
-    }
-  }
+  // const handleKeyPress = (e: React.KeyboardEvent) => {
+  //   if (e.key === 'Enter') {
+  //     handleSearchOnListEntrees()  // Lance la recherche seulement lorsqu'on appuie sur "Entrer"
+  //   }
+  // }
 
   const handleFilter = useCallback((val: string) => {
     setValue(val);
@@ -664,7 +682,6 @@ const EntreeList = () => {
           <TableHeader
             value={value}
             handleFilter={handleFilter}
-            handleKeyPress={handleKeyPress}
             toggle={handleCreateEntree}
             onReload={() => {
               setValue("");

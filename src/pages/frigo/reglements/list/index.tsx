@@ -46,12 +46,18 @@ const ReglementList = () => {
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
 
   const handleDeleteReglement = (reglement: Reglement) => {
-    setCurrentReglement(reglement)
-    setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
-    )
-    setComfirmationFunction(() => () => deleteReglement(reglement))
-    setOpen(true)
+    if (profile === 'ADMINISTRATEUR' || profile === 'GERANT') {
+      setCurrentReglement(reglement)
+      setComfirmationMessage(
+        `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
+      )
+      setComfirmationFunction(() => () => deleteReglement(reglement))
+      setOpen(true)
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Vous n avez pas le droit de supprimer cet reglement')
+    }
   }
 
   const deleteReglement = async (reglement: Reglement) => {
