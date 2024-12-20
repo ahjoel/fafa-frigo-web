@@ -222,7 +222,7 @@ const EntreeList = () => {
         },
       },
       {
-        width: 350,
+        width: 250,
         field: "produit",
         renderHeader: () => (
           <Tooltip title="Produit">
@@ -486,7 +486,8 @@ const EntreeList = () => {
               .toString()
               .toLowerCase()
               .includes(queryLowered)) ||
-          entree.qte.toString().toLowerCase().includes(queryLowered)
+          entree.qte.toString().toLowerCase().includes(queryLowered) ||
+          entree.pa.toString().toLowerCase().includes(queryLowered)
         );
       });
 

@@ -100,7 +100,7 @@ const SidebarAddEntree = (props: SidebarAddEntreeR1Type) => {
       produitId: Number(data.produitId),
       fournisseurId: Number(data.fournisseurId),
       types: 'ADD',
-      qte: Number(data.qte),
+      qte: Number(data.qte)
     }
 
     if (id === -1) {
@@ -269,6 +269,7 @@ const SidebarAddEntree = (props: SidebarAddEntreeR1Type) => {
               />
             )}
           />
+      
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button variant='outlined' sx={{ mr: 3 }} color='secondary' onClick={handleClose}>
               {t('Cancel')}

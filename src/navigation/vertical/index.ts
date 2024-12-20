@@ -81,8 +81,8 @@ const navigation = (): VerticalNavItemsType => {
     icon: "tabler:file-plus",
     children: [
       {
-        title: "Statistique des factures",
-        path: "/frigo/statistiques/listeDesFactures/",
+        title: "Situation Stock",
+        path: "/frigo/statistiques/fafa/stock/",
       },
       {
         title: "Statistique des ventes",

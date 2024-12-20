@@ -25,6 +25,7 @@ interface ProduitData {
   name: string
   mesure: string
   categorie: string
+  pa: number
   pv: number
   stock_min: number
 }
@@ -93,6 +94,7 @@ const schema = yup.object().shape({
       }
     })
     .required(),
+  pa: yup.number().required(() => 'Le champ prix achat est obligatoire'),
   pv: yup.number().required(() => 'Le champ prix de vente est obligatoire'),
   stock_min: yup.number().required(() => 'Le champ stock minimal est obligatoire'),
 })
@@ -102,6 +104,7 @@ const defaultValues = {
   name: '',
   mesure: '',
   categorie: '',
+  pa: 0,
   pv: 0,
   stock_min: 0,
 }
@@ -138,6 +141,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
       name: data.name,
       mesure: data.mesure,
       categorie: data.categorie,
+      pa: Number(data.pa),
       pv: Number(data.pv),
       stock_min: Number(data.stock_min)
     }
@@ -192,6 +196,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
       name: currentProduit !== null ? currentProduit?.name : '',
       mesure: currentProduit !== null ? currentProduit?.mesure : '',
       categorie: currentProduit !== null ? currentProduit?.categorie : '',
+      pa: (currentProduit && currentProduit?.pa !== undefined) ? currentProduit.pa : 0,
       pv: (currentProduit && currentProduit?.pv !== undefined) ? currentProduit.pv : 0,
       stock_min: (currentProduit && currentProduit?.stock_min !== undefined) ? currentProduit.stock_min : 0,
     })
@@ -299,6 +304,22 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
                 <MenuItem value={`SARDINELLE`}>SARDINELLE</MenuItem>
                 <MenuItem value={`AUTRES`}>AUTRES</MenuItem>
               </CustomTextField>
+            )}
+          />
+          <Controller
+            name='pa'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 6 }}
+                label='Prix Achat'
+                onChange={onChange}
+                error={Boolean(errors.pa)}
+                {...(errors.pa && { helperText: errors.pa.message })}
+              />
             )}
           />
           <Controller

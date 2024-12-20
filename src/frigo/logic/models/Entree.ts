@@ -12,6 +12,7 @@ export default class Entree extends MainModel {
   fournisseurId: number
   stock: string
   qte: number
+  pa: number
 
   constructor(
     id = -1,
@@ -29,7 +30,8 @@ export default class Entree extends MainModel {
     fournisseur = new Fournisseur(),
     fournisseurId = 0,
     stock = '',
-    qte = 0
+    qte = 0,
+    pa = 0
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
@@ -42,5 +44,6 @@ export default class Entree extends MainModel {
     this.fournisseurId = fournisseurId
     this.stock = stock
     this.qte = qte
+    this.pa = pa
   }
 }

@@ -8,6 +8,7 @@ export default class Produit extends MainModel {
   categorie: string
   fournisseur: string
   pv: number
+  pa: number
   stock_min: number
 
   constructor(
@@ -24,6 +25,7 @@ export default class Produit extends MainModel {
     categorie = '',
     fournisseur = '',
     pv = 0,
+    pa = 0,
     stock_min = 0
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
@@ -34,6 +36,7 @@ export default class Produit extends MainModel {
     this.categorie = categorie
     this.fournisseur = fournisseur
     this.pv = pv
+    this.pa = pa
     this.stock_min = stock_min
   }
 }

@@ -277,6 +277,45 @@ const ProduitList = () => {
       },
       {
         width: 200,
+        field: 'pa',
+        renderHeader: () => (
+          <Tooltip title='Prix Achat'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Prix Achat
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { pa } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {pa}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 200,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -421,6 +460,7 @@ const ProduitList = () => {
           produit.name.toLowerCase().includes(queryLowered) ||
           produit.categorie.toLowerCase().includes(queryLowered) ||
           (produit.fournisseur && produit.fournisseur.toString().toLowerCase().includes(queryLowered)) ||
+          produit.pa.toString().toLowerCase().includes(queryLowered) ||
           produit.pv.toString().toLowerCase().includes(queryLowered) ||
           produit.stock_min.toString().toLowerCase().includes(queryLowered)
         )

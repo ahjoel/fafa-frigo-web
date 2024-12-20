@@ -26,7 +26,7 @@ const TableHeader = (props: TableHeaderProps) => {
         justifyContent: 'space-between'
       }}
     >
-      <TextField
+      {/* <TextField
         label='Recherche règlement'
         size='small'
         color='primary'
@@ -34,7 +34,7 @@ const TableHeader = (props: TableHeaderProps) => {
         value={value}
         onChange={e => handleFilter(e.target.value)}
         sx={{ mr: 4 }}
-      />
+      /> */}
 
       <Box sx={{ display: 'flex', alignItems: 'right' }}>
         <Button
