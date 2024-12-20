@@ -16,6 +16,7 @@ import FactureDetail from 'src/frigo/logic/models/FactureDetail'
 import EntreeR1Service from 'src/frigo/logic/services/EntreeService'
 import FactureEclateDetailGros from 'src/frigo/logic/models/FactureEclateDetailGros'
 import FactureService from 'src/frigo/logic/services/FactureService'
+import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
 
 interface CellType {
   row: FactureEclateDetailGros
@@ -387,10 +388,11 @@ const FactureGros = () => {
   // Fonction pour lancer la recherche
   const handleSearchFacture = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
+    const datValue = formatDateEnAnglais(dateValue)
 
-    if (codeFacture || dateValue) {
+    if (codeFacture || datValue) {
       setStatusFactures(true)
-      const res = await factureService.listGrosFactureSearch({ code: codeFacture, date: dateValue })
+      const res = await factureService.listDetailFactureSearch({ code: codeFacture, date: datValue })
   
       if (res.success) {
         setStatusFactures(false)

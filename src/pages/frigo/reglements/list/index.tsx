@@ -24,6 +24,7 @@ import Reglement from 'src/frigo/logic/models/Reglement'
 import ReglementService from 'src/frigo/logic/services/ReglementService'
 import TableHeader from 'src/frigo/views/reglements/list/TableHeader'
 import { TextField } from '@mui/material'
+import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
 
 interface CellType {
   row: Reglement
@@ -409,10 +410,11 @@ const ReglementList = () => {
 
   const handleSearchReglement = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
+    const datValue = formatDateEnAnglais(dateValue)
 
-    if (codeFacture || dateValue) {
+    if (codeFacture || datValue) {
       setStatusReglements(true)
-      const res = await reglementService.listReglementSearch({ code: codeFacture, date: dateValue })
+      const res = await reglementService.listReglementSearch({ code: codeFacture, date: datValue })
 
       if (res.success) {
         setStatusReglements(false)

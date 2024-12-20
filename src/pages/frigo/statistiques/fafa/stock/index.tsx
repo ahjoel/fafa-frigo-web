@@ -27,6 +27,8 @@ import { TextField } from '@mui/material'
 import EntreeService from 'src/frigo/logic/services/EntreeService'
 import EntreeR1Dispo from 'src/frigo/logic/models/EntreeR1Dispo'
 import Mouvement from 'src/frigo/logic/models/Mouvement'
+import { generatePdf } from 'src/frigo/views/pdfMake/StockList'
+import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
 
 interface CellType {
   row: Mouvement
@@ -367,8 +369,10 @@ const StatStockList = () => {
   };
 
   const handleListData = async () => {
+    const ddebut = formatDateEnAnglais(dd)
+    const dfin = formatDateEnAnglais(df)
 
-    if ((dd && df) && (dd <= df)) {
+    if ((ddebut && dfin) && (ddebut <= dfin)) {
       setStatusSitutation(true)
       const res = await entreeService.listStatMouvementStock({ dd: dd, df: df })
 
@@ -390,6 +394,24 @@ const StatStockList = () => {
       setMessage('Dates invalides')
     }
 
+  };
+
+  const handleExportToPDF = async () => {
+    try {
+      if (situations.length > 0) {
+        generatePdf(situations as never[], 'Situation - Liste_Des_Produits', dd, df);
+      }else{
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage("Recherchez les données sur une periode en premier.")
+      }
+
+    } catch (error) {
+      console.error('Error exporting data to PDF', error);
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage("Une erreur est survenue lors de l'exportation en PDF.")
+    }
   };
 
 
@@ -448,9 +470,17 @@ const StatStockList = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleListData()}
-                sx={{ height: 40 }}
+                sx={{ height: 40, mr:5 }}
               >
                 Rechercher
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleExportToPDF()}
+                sx={{ height: 40 }}
+              >
+                Exporter PDF
               </Button>
             </Box>
           </Box>

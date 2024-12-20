@@ -28,6 +28,7 @@ import AddEntreeDrawer from "src/frigo/views/entree/list/AddEntreeDrawer";
 import Fournisseur from "src/frigo/logic/models/Fournisseur";
 import FournisseurService from "src/frigo/logic/services/FournisseurService";
 import { TextField } from "@mui/material";
+import { formatDateEnAnglais } from "src/frigo/logic/utils/constant";
 
 interface CellType {
   row: Entree;
@@ -609,10 +610,11 @@ const EntreeList = () => {
   
   const handleSearchEntree = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
+    const datValue = formatDateEnAnglais(dateValue)
 
-    if (dateValue) {
+    if (datValue) {
       setStatusEntree(true)
-      const res = await entreeService.listEntreeSearch({ date: dateValue })
+      const res = await entreeService.listEntreeSearch({ date: datValue })
 
       if (res.success) {
         setStatusEntree(false)

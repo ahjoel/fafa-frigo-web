@@ -34,6 +34,7 @@ import PaymentIcon from '@mui/icons-material/Payment'
 import PrintIcon from '@mui/icons-material/Print'
 import ClientService from 'src/frigo/logic/services/ClientService'
 import Client from 'src/frigo/logic/models/Client'
+import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
 
 interface CellType {
   row: Facture
@@ -1331,10 +1332,11 @@ const FactureList = () => {
   // Fonction pour lancer la recherche
   const handleSearchFacture = async () => {
     // Ici, tu peux ajouter la logique pour effectuer la recherche
+    const datValue = formatDateEnAnglais(dateValue)
 
-    if (codeFacture || dateValue) {
+    if (codeFacture || datValue) {
       setStatusFactures(true)
-      const res = await factureService.listGeneralFactureSearch({ code: codeFacture, date: dateValue })
+      const res = await factureService.listGeneralFactureSearch({ code: codeFacture, date: datValue })
   
       if (res.success) {
         setStatusFactures(false)
