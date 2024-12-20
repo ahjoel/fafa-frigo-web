@@ -252,7 +252,7 @@ const ReglementList = () => {
 
   // Axios call to loading Data
   const getListReglements = async (page: number, pageSize: number) => {
-    const result = await reglementService.listReglements({ page: page + 1, length: pageSize })
+    const result = await reglementService.listReglements()
 
     if (result.success) {
       const filteredData = result.data as Reglement[]

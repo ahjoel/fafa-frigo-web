@@ -85,17 +85,13 @@ const navigation = (): VerticalNavItemsType => {
         path: "/frigo/statistiques/fafa/stock/",
       },
       {
-        title: "Statistique des ventes",
+        title: "Situation des factures",
         path: "/frigo/statistiques/listeDesReglements/",
       },
       {
-        title: "Invent. stock",
+        title: "Situtaion des ventes",
         path: "/frigo/statistiques/listeDesFacturesStockGene/",
-      },
-      {
-        title: "Caisse Mensuelle",
-        path: "/frigo/statistiques/listeDesReglementPerMonth/",
-      },
+      }
     ],
   };
 
