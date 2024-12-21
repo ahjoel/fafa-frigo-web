@@ -279,8 +279,8 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
               >
                 <MenuItem value={``}>Selectionnez une mesure</MenuItem>
-                <MenuItem value={`Kg`}>Kilogramme</MenuItem>
-                <MenuItem value={`Crt`}>Carton</MenuItem>
+                <MenuItem value={`KG`}>Kilogramme</MenuItem>
+                <MenuItem value={`CRT`}>Carton</MenuItem>
               </CustomTextField>
             )}
           />

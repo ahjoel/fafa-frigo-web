@@ -49,7 +49,7 @@ interface ColumnType {
 }
 
 const schema = yup.object().shape({
-  client_id: yup.string().required(() => 'Le champ client est obligatoire')
+  client_id: yup.string().required(()=>'Le champ client est obligatoire')
 })
 
 const defaultValues = {
@@ -191,7 +191,7 @@ const FactureEnCours = () => {
     // L'augmentation de qte ne doit pas dépasser la qte dispo pour le produit
     if (existingProductIndex !== -1) {
       if (cartProductArray[existingProductIndex].quantity < row.stockDispo) {
-        cartProductArray[existingProductIndex].quantity += 1
+        cartProductArray[existingProductIndex].quantity += 0.25
         localStorage.setItem('cart1', JSON.stringify(cartProductArray))
       } else {
         setOpenNotification(true)
@@ -219,8 +219,8 @@ const FactureEnCours = () => {
     )
 
     if (existingProductIndex !== -1) {
-      if (cartProductArray[existingProductIndex].quantity > 1) {
-        cartProductArray[existingProductIndex].quantity -= 1
+      if (cartProductArray[existingProductIndex].quantity > 0.25) {
+        cartProductArray[existingProductIndex].quantity -= 0.25
       }
       localStorage.setItem('cart1', JSON.stringify(cartProductArray))
     } else {
@@ -618,7 +618,7 @@ const FactureEnCours = () => {
                     {...(errors.client_id && { helperText: errors.client_id.message })}
                     SelectProps={{ value: value, onChange: e => onChange(e) }}
                   >
-                    <MenuItem value={0}>Sélectionnez la table client</MenuItem>
+                    <MenuItem value={-1}>Sélectionnez la table client</MenuItem>
                     {clients?.map(client => (
                       <MenuItem key={client.id} value={client.id}>
                         {client.name}

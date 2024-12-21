@@ -83,15 +83,15 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: "Situation Stock",
         path: "/frigo/statistiques/fafa/stock/",
-      },
-      {
-        title: "Situation des factures",
-        path: "/frigo/statistiques/listeDesReglements/",
-      },
-      {
-        title: "Situtaion des ventes",
-        path: "/frigo/statistiques/listeDesFacturesStockGene/",
       }
+      // {
+      //   title: "Situation des factures",
+      //   path: "/frigo/statistiques/listeDesReglements/",
+      // },
+      // {
+      //   title: "Situtaion des ventes",
+      //   path: "/frigo/statistiques/listeDesFacturesStockGene/",
+      // }
     ],
   };
 

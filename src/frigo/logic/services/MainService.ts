@@ -738,9 +738,9 @@ export default class MainService {
       } else {
         result.description = response.data.description
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching data:', error)
-      result.description = 'Une erreur est survenue.'
+      result.description = error.response.data.description
     }
 
     return result

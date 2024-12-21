@@ -42,6 +42,8 @@ const EntreeList = () => {
   const produitService = new ProduitService();
   const entreeService = new EntreeService();
   const fournisseurService = new FournisseurService();
+  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
+  const profile = userData?.profile
   const produitId = 0;
   const fournisseurId = 0;
 
@@ -442,24 +444,26 @@ const EntreeList = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Supprimer">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() => {
-                  handleDeleteEntree(row);
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    color: (theme) => theme.palette.error.main,
+            {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
+              <Tooltip title="Supprimer">
+                <IconButton
+                  size="small"
+                  sx={{ color: "text.primary" }}
+                  onClick={() => {
+                    handleDeleteEntree(row);
                   }}
                 >
-                  <Icon icon="tabler:trash" />
-                </Box>
-              </IconButton>
-            </Tooltip>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      color: (theme) => theme.palette.error.main,
+                    }}
+                  >
+                    <Icon icon="tabler:trash" />
+                  </Box>
+                </IconButton>
+              </Tooltip>
+            )}
           </Box>
         ),
       },

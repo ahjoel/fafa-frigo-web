@@ -66,7 +66,7 @@ const FactureGros = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        width: 150,
+        width: 200,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -106,7 +106,7 @@ const FactureGros = () => {
         }
       },
       {
-        width: 250,
+        width: 300,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date Facture'>
@@ -146,7 +146,7 @@ const FactureGros = () => {
         }
       },
       {
-        width: 150,
+        width: 200,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -187,7 +187,7 @@ const FactureGros = () => {
         }
       },
       {
-        width: 250,
+        width: 300,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -265,84 +265,84 @@ const FactureGros = () => {
           )
         }
       },
-      {
-        width: 100,
-        field: 'qte',
-        renderHeader: () => (
-          <Tooltip title='Quantite'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Quantite
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { qte } = row
+      // {
+      //   width: 100,
+      //   field: 'qte',
+      //   renderHeader: () => (
+      //     <Tooltip title='Quantite'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Quantite
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { qte } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {qte}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 150,
-        field: 'pv',
-        renderHeader: () => (
-          <Tooltip title='Prix de vente'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Prix de vente
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { pv } = row
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {qte}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // },
+      // {
+      //   width: 150,
+      //   field: 'pv',
+      //   renderHeader: () => (
+      //     <Tooltip title='Prix de vente'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Prix de vente
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { pv } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {pv}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      }
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {pv}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // }
     ]
 
     return colArray

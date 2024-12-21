@@ -41,7 +41,9 @@ interface ColumnType {
 
 const ProduitList = () => {
   const produitService = new ProduitService()
-
+  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
+  const profile = userData?.profile
+  
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
@@ -413,33 +415,35 @@ const ProduitList = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Mettre à jour un produit'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleUpdateProduit(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-                  <Icon icon='tabler:edit' />
-                </Box>
-              </IconButton>
-            </Tooltip>
+              <Tooltip title='Mettre à jour un produit'>
+                <IconButton
+                  size='small'
+                  sx={{ color: 'text.primary' }}
+                  onClick={() => {
+                    handleUpdateProduit(row)
+                  }}
+                >
+                  <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
+                    <Icon icon='tabler:edit' />
+                  </Box>
+                </IconButton>
+              </Tooltip>
 
-            <Tooltip title='Supprimer'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleDeleteProduit(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-                  <Icon icon='tabler:trash' />
-                </Box>
-              </IconButton>
-            </Tooltip>
+              {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
+                <Tooltip title='Supprimer'>
+                  <IconButton
+                    size='small'
+                    sx={{ color: 'text.primary' }}
+                    onClick={() => {
+                      handleDeleteProduit(row)
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
+                      <Icon icon='tabler:trash' />
+                    </Box>
+                  </IconButton>
+                </Tooltip>
+              )}
           </Box>
         )
       }

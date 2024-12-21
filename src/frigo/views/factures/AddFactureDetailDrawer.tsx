@@ -103,12 +103,6 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
       const result = await mouvementService.createSortieR1(sendData)
       setSend(false)
 
-      if (result.description === 'La quantité est supérieur au stock disponible') {
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage(result.description)
-      }
-
       if (result.success) {
         reset()
         onAdd()
@@ -118,7 +112,7 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
         setOpenNotification(true)
         setTypeMessage('error')
         console.log('-----', result.description)
-        setMessage('Une erreur est survenue.')
+        setMessage(result.description)
       }
     }
   }

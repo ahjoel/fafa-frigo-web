@@ -154,14 +154,14 @@ const FactureList = () => {
 
       if (response.success) {
         setSendPayement(false)
-        handleChange()
-        handleChangeFactureAndDetail()
-        getDetailsFactureForPrint()
-        handleClosePayement()
+        // handleChange()
+        // handleChangeFactureAndDetail()
+        // getDetailsFactureForPrint()
+        // handleClosePayement()
         setOpenNotification(true)
         setTypeMessage('success')
         setMessage('Facture réglée avec succès')
-
+        
         window.location.reload();
       } else {
         setSendPayement(false)
@@ -321,7 +321,7 @@ const FactureList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        width: 100,
+        width: 90,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -361,7 +361,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 200,
+        width: 180,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date facture'>
@@ -442,7 +442,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 100,
+        width: 80,
         field: 'tax',
         renderHeader: () => (
           <Tooltip title='Tax'>
@@ -677,7 +677,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 150,
+        width: 200,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -1061,8 +1061,8 @@ const FactureList = () => {
       ?.map(
         (facturesDetp) => `
         <tr class="details-row">
-          <td class="kilo">${facturesDetp.mesure === 'Kg' ? facturesDetp.qte : ''}</td>
-          <td class="cts">${facturesDetp.mesure === 'Crt' ? facturesDetp.qte : ''}</td>
+          <td class="kilo">${facturesDetp.mesure === 'KG' ? facturesDetp.qte : ''}</td>
+          <td class="cts">${facturesDetp.mesure === 'CRT' ? facturesDetp.qte : ''}</td>
           <td class="description">${facturesDetp.produit}</td>
           <td class="pu">${facturesDetp.pv.toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')}</td>
           <td class="montant">${(facturesDetp.qte * facturesDetp.pv).toString().replace(/\B(?=(\\d{3})+(?!\\d))/g, ' ')}</td>
@@ -1215,7 +1215,6 @@ const FactureList = () => {
     printWindow?.document.close();
     printWindow?.print();
   };
-
 
   const handlePrint = () => {
     // Masquer les éléments que vous ne souhaitez pas imprimer
@@ -1561,10 +1560,10 @@ const FactureList = () => {
                     facturesDetailsPrint?.map(facturesDetp => (
                       <tr key={facturesDetp.id}>
                         <td className='Kg' style={styles['.Kg']}>
-                          {facturesDetp.mesure === 'Kg' ? facturesDetp.qte * 1.00 : '-'}
+                          {facturesDetp.mesure === 'KG' ? facturesDetp.qte * 1.00 : '-'}
                         </td>
                         <td className='Crt' style={styles['.Crt']}>
-                          {facturesDetp.mesure === 'Crt' ? facturesDetp.qte * 1.00 : '-'}
+                          {facturesDetp.mesure === 'CRT' ? facturesDetp.qte * 1.00 : '-'}
                         </td>
                         <td className='description' style={styles['.description']}>
                           {facturesDetp.produit}

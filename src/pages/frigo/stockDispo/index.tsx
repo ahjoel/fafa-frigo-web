@@ -348,7 +348,7 @@ const EntreeR1List = () => {
         categorie: entreeR1Dispo.categorie,
         pv: Number(entreeR1Dispo.pv),
         stockDispo: Number(entreeR1Dispo.st_dispo),
-        quantity: 1
+        quantity: 0.25
       }
 
       // Vérifier si le produit existe déjà dans le panier
