@@ -321,7 +321,7 @@ const FactureList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        width: 90,
+        width: 200,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -334,7 +334,7 @@ const FactureList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Code
+              Code Facture
             </Typography>
           </Tooltip>
         ),
@@ -361,7 +361,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 180,
+        width: 200,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date facture'>
@@ -401,7 +401,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 120,
+        width: 200,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -442,7 +442,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 80,
+        width: 100,
         field: 'tax',
         renderHeader: () => (
           <Tooltip title='Tax'>
@@ -521,7 +521,7 @@ const FactureList = () => {
         }
       },
       {
-        width: 180,
+        width: 200,
         field: 'totalfacture',
         renderHeader: () => (
           <Tooltip title='Montant Facture'>
@@ -598,84 +598,84 @@ const FactureList = () => {
           )
         }
       },
-      {
-        width: 200,
-        field: 'margeBene',
-        renderHeader: () => (
-          <Tooltip title='Benefice'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Montant Fact Achat
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { margeBene } = row
+      // {
+      //   width: 200,
+      //   field: 'margeBene',
+      //   renderHeader: () => (
+      //     <Tooltip title='Benefice'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Montant Fact Achat
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { margeBene } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {margeBene}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 100,
-        field: 'margeBeneRel',
-        renderHeader: () => (
-          <Tooltip title='Benefice'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Benefice
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { margeBene, totalfacture } = row
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {margeBene}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // },
+      // {
+      //   width: 100,
+      //   field: 'margeBeneRel',
+      //   renderHeader: () => (
+      //     <Tooltip title='Benefice'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Benefice
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { margeBene, totalfacture } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {Number(totalfacture) - Number(margeBene)}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {Number(totalfacture) - Number(margeBene)}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // },
       {
         width: 200,
         sortable: false,

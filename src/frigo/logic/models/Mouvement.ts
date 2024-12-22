@@ -3,6 +3,8 @@ import Produit from './Produit'
 
 export default class Mouvement extends MainModel {
   produit: Produit | string
+  code: string
+  fournisseur: string
   produitId: number
   categorie: string
   mesure: string
@@ -13,6 +15,8 @@ export default class Mouvement extends MainModel {
   stockMinimal: string
   pv: number
   margeBene: number
+  qte: number
+  name: string
 
   constructor(
     id = -1,
@@ -25,6 +29,8 @@ export default class Mouvement extends MainModel {
     produit = new Produit(),
     produitId = 0,
     categorie = '',
+    code = '',
+    fournisseur = '',
     mesure = '',
     st_dispo = 0,
     st_init = 0,
@@ -33,12 +39,16 @@ export default class Mouvement extends MainModel {
     stockMinimal = '',
     pv = 0,
     margeBene = 0,
+    qte = 0,
+    name = ''
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
     this.produit = produit
     this.produitId = produitId
     this.categorie = categorie
+    this.code = code
+    this.fournisseur = fournisseur
     this.mesure = mesure
     this.st_dispo = st_dispo
     this.stockMinimal = stockMinimal
@@ -47,5 +57,7 @@ export default class Mouvement extends MainModel {
     this.st_init = st_init
     this.qt_e = qt_e
     this.qt_s = qt_s
+    this.qte = qte
+    this.name = name
   }
 }

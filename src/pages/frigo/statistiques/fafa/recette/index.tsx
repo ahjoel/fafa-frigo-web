@@ -5,40 +5,29 @@ import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
-import Icon from 'src/@core/components/icon'
-import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
-import Reglement from 'src/frigo/logic/models/Reglement'
-import ReglementService from 'src/frigo/logic/services/ReglementService'
 import TableHeader from 'src/frigo/views/reglements/list/TableHeader'
 import { TextField } from '@mui/material'
 import EntreeService from 'src/frigo/logic/services/EntreeService'
-import EntreeR1Dispo from 'src/frigo/logic/models/EntreeR1Dispo'
 import Mouvement from 'src/frigo/logic/models/Mouvement'
-import { generatePdf } from 'src/frigo/views/pdfMake/StockList'
 import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
+import { generatePdfStockEntree } from 'src/frigo/views/pdfMake/StockListEntree'
+import Facture from 'src/frigo/logic/models/Facture'
+import { generatePdfRecettePeriode } from 'src/frigo/views/pdfMake/RecettePeriode'
 
 interface CellType {
-  row: Mouvement
+  row: Facture
 }
 
 interface ColumnType {
   [key: string]: any
 }
 
-const StatStockList = () => {
+const StatRecettePeriode = () => {
   const entreeService = new EntreeService()
   const userData = JSON.parse(window.localStorage.getItem('userData') as string)
   const profile = userData?.profile
@@ -62,13 +51,14 @@ const StatStockList = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = () => {
+  const getColumns = (
+  ) => {
     const colArray: ColumnType[] = [
       {
-        width: 50,
-        field: 'id',
+        width: 150,
+        field: 'code',
         renderHeader: () => (
-          <Tooltip title='#'>
+          <Tooltip title='Code'>
             <Typography
               noWrap
               sx={{
@@ -78,12 +68,12 @@ const StatStockList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              #
+              Code
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { id } = row
+          const { code } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -93,49 +83,11 @@ const StatStockList = () => {
                   sx={{
                     fontWeight: 500,
                     textDecoration: 'none',
-                    color: 'primary.main'
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
-                  {id}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 250,
-        field: 'produit',
-        renderHeader: () => (
-          <Tooltip title='Produit'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Produit
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { produit, mesure, categorie } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {produit.toString()} - {mesure} {categorie}
+                  {code}
                 </Typography>
               </Box>
             </Box>
@@ -144,9 +96,9 @@ const StatStockList = () => {
       },
       {
         width: 180,
-        field: 'st_init',
+        field: 'createdAt',
         renderHeader: () => (
-          <Tooltip title='Stock initial'>
+          <Tooltip title='Date facture'>
             <Typography
               noWrap
               sx={{
@@ -156,26 +108,26 @@ const StatStockList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Stock Initial
+              Date facture
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { st_init } = row
+          const { createdAt } = row
 
           return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography
                   noWrap
                   sx={{
                     fontWeight: 500,
                     textDecoration: 'none',
-                    color: 'primary.main',
-                    textAlign: 'center'
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
-                  {st_init}
+                  {createdAt.slice(0, -5).replace(/T/g, ' ')}
                 </Typography>
               </Box>
             </Box>
@@ -183,10 +135,10 @@ const StatStockList = () => {
         }
       },
       {
-        width: 200,
-        field: 'qt_e',
+        width: 120,
+        field: 'client',
         renderHeader: () => (
-          <Tooltip title='Qte Entree'>
+          <Tooltip title='Client'>
             <Typography
               noWrap
               sx={{
@@ -196,26 +148,27 @@ const StatStockList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Qte Entree
+              Client
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { qt_e } = row
+          const { client } = row
 
           return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography
                   noWrap
                   sx={{
                     fontWeight: 500,
                     textDecoration: 'none',
                     color: 'primary.main',
-                    textAlign: 'center'
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
-                  {qt_e}
+                  {client.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -223,10 +176,10 @@ const StatStockList = () => {
         }
       },
       {
-        width: 150,
-        field: 'qt_s',
+        width: 100,
+        field: 'tax',
         renderHeader: () => (
-          <Tooltip title='Qte Sortie'>
+          <Tooltip title='Tax'>
             <Typography
               noWrap
               sx={{
@@ -236,92 +189,12 @@ const StatStockList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Qte Sortie
+              Tax
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { qt_s } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main',
-                    textAlign: 'center'
-                  }}
-                >
-                  {qt_s}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 150,
-        field: 'st_dispo',
-        renderHeader: () => (
-          <Tooltip title='Qte Dispo'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Qte Dispo
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { st_dispo } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main',
-                    textAlign: 'center'
-                  }}
-                >
-                  {st_dispo}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        width: 150,
-        field: 'stockMinimal',
-        renderHeader: () => (
-          <Tooltip title='Stock Mini'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Stock Minimal
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { stockMinimal } = row
+          const { taxe } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -334,7 +207,203 @@ const StatStockList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {stockMinimal}
+                  {taxe}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 150,
+        field: 'nbproduit',
+        renderHeader: () => (
+          <Tooltip title='Nombre(s) Produit(s)'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              NB Produit
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { nbproduit } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main',
+                    textAlign: 'center'
+                  }}
+                >
+                  {nbproduit}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 180,
+        field: 'totalfacture',
+        renderHeader: () => (
+          <Tooltip title='Montant Facture'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Montant Facture
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { totalfacture } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {totalfacture}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 100,
+        field: 'statut',
+        renderHeader: () => (
+          <Tooltip title='Statut'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Statut
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { statut } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {statut}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 200,
+        field: 'margeBene',
+        renderHeader: () => (
+          <Tooltip title='Benefice'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Montant Fact Achat
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { margeBene } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {margeBene}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 200,
+        field: 'margeBeneRel',
+        renderHeader: () => (
+          <Tooltip title='Benefice'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Benefice
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { margeBene, totalfacture } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {Number(totalfacture) - Number(margeBene)}
                 </Typography>
               </Box>
             </Box>
@@ -345,7 +414,6 @@ const StatStockList = () => {
 
     return colArray
   }
-
 
   // Control search data in datagrid
   useEffect(() => {
@@ -374,7 +442,7 @@ const StatStockList = () => {
 
     if ((ddebut && dfin) && (ddebut <= dfin)) {
       setStatusSitutation(true)
-      const res = await entreeService.listStatMouvementStock({ dd: dd, df: df })
+      const res = await entreeService.listRecettePeriode({ dd: dd, df: df })
 
       if (res.success) {
         setStatusSitutation(false)
@@ -399,7 +467,7 @@ const StatStockList = () => {
   const handleExportToPDF = async () => {
     try {
       if (situations.length > 0) {
-        generatePdf(situations as never[], 'Situation - Liste_Des_Produits', dd, df);
+        generatePdfRecettePeriode(situations as never[], 'Situation - Liste_Des_Ventes', dd, df);
       }else{
         setOpenNotification(true);
         setTypeMessage("error");
@@ -414,13 +482,12 @@ const StatStockList = () => {
     }
   };
 
-
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
           <Typography variant="h5" sx={{ py: 2, px: 6 }}>
-            Situation du Stock des produits
+            Recette ventes sur periodes
           </Typography>
           <Box
             sx={{
@@ -531,4 +598,4 @@ const StatStockList = () => {
   )
 }
 
-export default StatStockList
+export default StatRecettePeriode

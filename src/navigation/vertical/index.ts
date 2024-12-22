@@ -81,17 +81,21 @@ const navigation = (): VerticalNavItemsType => {
     icon: "tabler:file-plus",
     children: [
       {
+        title: "Situation Stock Entrees",
+        path: "/frigo/statistiques/fafa/entree/",
+      },
+      {
+        title: "Situation Stock Sorties",
+        path: "/frigo/statistiques/fafa/sortie/",
+      },
+      {
         title: "Situation Stock",
         path: "/frigo/statistiques/fafa/stock/",
+      },
+      {
+        title: "Recette ventes",
+        path: "/frigo/statistiques/fafa/recette/",
       }
-      // {
-      //   title: "Situation des factures",
-      //   path: "/frigo/statistiques/listeDesReglements/",
-      // },
-      // {
-      //   title: "Situtaion des ventes",
-      //   path: "/frigo/statistiques/listeDesFacturesStockGene/",
-      // }
     ],
   };
 
