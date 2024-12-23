@@ -251,7 +251,7 @@ const ClientList = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title={t('Update an model')}>
+            <Tooltip title='Modifier le client'>
               <IconButton
                 size='small'
                 sx={{ color: 'text.primary' }}

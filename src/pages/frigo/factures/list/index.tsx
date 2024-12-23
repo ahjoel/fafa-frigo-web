@@ -161,14 +161,13 @@ const FactureList = () => {
         setOpenNotification(true)
         setTypeMessage('success')
         setMessage('Facture réglée avec succès')
-        
-        window.location.reload();
       } else {
         setSendPayement(false)
         setOpenNotification(true)
         setTypeMessage('error')
         setMessage('Facture non trouvé')
       }
+      window.location.reload();
     } catch (error) {
       console.error('Erreur lors du reglement de facture :', error)
       setSendPayement(false)
@@ -204,6 +203,7 @@ const FactureList = () => {
         setTypeMessage('error')
         setMessage('Facture non trouvé')
       }
+      window.location.reload();
     } catch (error) {
       console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
@@ -264,6 +264,7 @@ const FactureList = () => {
     setTypeMessage(type)
     const messageTrans = t(message)
     setMessage(messageTrans)
+    
   }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {

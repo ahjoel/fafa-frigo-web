@@ -108,6 +108,7 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
         onAdd()
         toggle()
         onSuccess('Registration completed successfully')
+        window.location.reload();
       } else {
         setOpenNotification(true)
         setTypeMessage('error')
