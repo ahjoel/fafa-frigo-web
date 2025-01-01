@@ -128,52 +128,63 @@ const FactureList = () => {
   const handleClosePayement = () => setOpenPayement(false)
   const handleClosePrint = () => setOpenPrint(false)
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
-  const [comfirmationMessagePayement, setComfirmationMessagePayement] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
-  const [comfirmationPayement, setComfirmationPayement] = useState<() => void>(() => console.log(' .... '))
+  const [montantRecu, setMontantRecu] = useState('');
 
-  // const [comfirmationPayementFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
+  // Handle change in the input fields
+  const handleMontantRecuChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMontantRecu(event.target.value);
+  };
 
   const handlePayementFacture = (facture: Facture) => {
-    setCurrentFacture(facture)
-    setComfirmationMessagePayement(`Voulez-vous régler la facture ${facture.code} de ${facture.totalfacture} F CFA ?`)
-    setComfirmationPayement(() => () => payementFacture(facture))
-    setOpenPayement(true)
-  }
+    setCurrentFacture(facture); 
+    setOpenPayement(true);
+  };
 
-  const payementFacture = async (facture: Facture) => {
+  const payementFacture = async () => {
     setSendPayement(true)
+    
+    const mtRecu = Number(montantRecu);
+    const totFact = Number(currentFacture?.totalfacture);    
 
-    const dataSave = {
-      facture_id: facture.id,
-      total: Number(facture.totalfacture)
-    }
-
-    try {
-      const response = await factureService.createReglement(dataSave)
-
-      if (response.success) {
-        setSendPayement(false)
-        // handleChange()
-        // handleChangeFactureAndDetail()
-        // getDetailsFactureForPrint()
-        // handleClosePayement()
-        setOpenNotification(true)
-        setTypeMessage('success')
-        setMessage('Facture réglée avec succès')
-      } else {
+    if (mtRecu >= totFact) {
+      const dataSave = {
+        facture_id: currentFacture?.id,
+        montantRecu: mtRecu,
+        total: totFact
+      }
+  
+      try {
+        const response = await factureService.createReglement(dataSave)
+  
+        if (response.success) {
+          setSendPayement(false)
+          // handleChange()
+          // handleChangeFactureAndDetail()
+          // getDetailsFactureForPrint()
+          // handleClosePayement()
+          setOpenNotification(true)
+          setTypeMessage('success')
+          setMessage('Facture réglée avec succès')
+        } else {
+          setSendPayement(false)
+          setOpenNotification(true)
+          setTypeMessage('error')
+          setMessage('Facture non trouvé')
+        }
+        window.location.reload();
+      } catch (error) {
+        console.error('Erreur lors du reglement de facture :', error)
         setSendPayement(false)
         setOpenNotification(true)
         setTypeMessage('error')
-        setMessage('Facture non trouvé')
+        setMessage('Une erreur est survenue')
       }
-      window.location.reload();
-    } catch (error) {
-      console.error('Erreur lors du reglement de facture :', error)
+    }else{
       setSendPayement(false)
       setOpenNotification(true)
       setTypeMessage('error')
-      setMessage('Une erreur est survenue')
+      setMessage('Erreur sur le montant saisie')
     }
   }
 
@@ -1058,6 +1069,7 @@ const FactureList = () => {
   }
 
   const printReceipt = (facturesDetailsPrint: FactureDetail[]) => {
+
     const rows = facturesDetailsPrint
       ?.map(
         (facturesDetp) => `
@@ -1152,7 +1164,7 @@ const FactureList = () => {
                   text-align: center;
                   font-size: 11px;
                   margin-top: 15px;
-                  color: #777;
+                  color: black;
               }
 
               .footer span {
@@ -1164,9 +1176,9 @@ const FactureList = () => {
       <body>
           <div class="receipt">
               <div class="receipt-header">
-                  <h1>FAFA-FRIGO</h1>
-                  <p>Adétikopé en face de l'Hôtel Amoukadi</p>
-                  <p>Tel : (+228) 92 65 47 84</p>
+                  <h1 style="color: black; font-weight: bold">FAFA-FRIGO</h1>
+                  <p style="color: black; font-weight: bold">Adétikopé en face de l'Hôtel Amoukadi</p>
+                  <p style="color: black; font-weight: bold">Tel : (+228) 92 65 47 84</p>
               </div>
               <div class="details-row">
                   <span style="font-weight: bold">${facturesDetailsPrint[0]?.codeFacture}</span>
@@ -1191,14 +1203,18 @@ const FactureList = () => {
               </table>
               <div class="total">
                   TOTAL : ${facturesDetailsPrint
-        ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-      } F <br/>
+                ?.reduce((sum, item) => sum + item.pv * item.qte, 0)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+              } F <br/>
+              </div>
+              <div class="payment-info" style="margin-top: 10px;">
+                  <div style="font-weight: bold;">Montant Reçu: ${facturesDetailsPrint[0].statut === 'Payée' ? `${facturesDetailsPrint[0]?.mtrecu?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') || 0 }` + ` F CFA` : ``}</div>
+                  <div style="font-weight: bold; margin-top: 5px">Reliquat: ${facturesDetailsPrint[0].statut === 'Payée' ? `${facturesDetailsPrint[0]?.relicat?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') || 0 }` + ` F CFA` : ``}</div>
               </div>
               <div class="footer">
-                  <span>${facturesDetailsPrint[0].statut !== 'Payée' ? `BON DE COMMANDE` : ``}</span>
-                  <span>Les produits vendus ne sont ni repris ni échangés pour des raisons sanitaires.</span>
+                  <span style="font-weight: bold">${facturesDetailsPrint[0].statut !== 'Payée' ? `BON DE COMMANDE` : ``}</span>
+                  <span style="font-weight: bold">Les produits vendus ne sont ni repris ni échangés pour des raisons sanitaires.</span>
               </div>
           </div>
           <script>
@@ -1704,18 +1720,26 @@ const FactureList = () => {
         <DialogTitle id='alert-dialog-title'>Confirmation de Payement</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description' sx={{ color: 'black' }}>
-            {t(comfirmationMessagePayement)}
+            Voulez-vous régler la facture de {currentFacture?.code} pour {currentFacture?.totalfacture} F CFA ?
           </DialogContentText>
+          <TextField
+            label="Montant Reçu"
+            variant="outlined"
+            fullWidth
+            value={montantRecu}
+            onChange={handleMontantRecuChange}
+            margin="normal"
+            type="number"
+          />
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
           <Button onClick={handleClosePayement} color='secondary'>
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => {
-              comfirmationPayement()
-            }}
+            onClick={() => {payementFacture()}}
             loading={sendPayement}
+            disabled={!montantRecu}
             endIcon={<PaymentIcon />}
             variant='contained'
             color='info'

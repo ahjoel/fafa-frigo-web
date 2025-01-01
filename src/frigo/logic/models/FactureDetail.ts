@@ -6,6 +6,8 @@ export default class FactureDetail extends MainModel {
   categorie: string
   mesure: string
   fournisseur: string
+  mtrecu: string
+  relicat: string
   qte: number
   pv: number
   factureId: number
@@ -23,6 +25,8 @@ export default class FactureDetail extends MainModel {
     deletedBy = null,
     deletedAt = '',
     produit = '',
+    mtrecu = '',
+    relicat = '',
     categorie = '',
     mesure = '',
     qte = 0,
@@ -41,6 +45,8 @@ export default class FactureDetail extends MainModel {
     this.categorie = categorie
     this.mesure = mesure
     this.fournisseur = fournisseur
+    this.mtrecu = mtrecu
+    this.relicat = relicat
     this.qte = qte
     this.pv = pv
     this.factureId = factureId

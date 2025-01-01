@@ -270,7 +270,85 @@ const ReglementList = () => {
         }
       },
       {
-        width: 200,
+        width: 150,
+        field: 'mtrecu',
+        renderHeader: () => (
+          <Tooltip title='Montant Recu'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Montant Recu
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { mtrecu } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {mtrecu}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 150,
+        field: 'relicat',
+        renderHeader: () => (
+          <Tooltip title='Reliquat'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Reliquat
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { relicat } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {relicat}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        width: 100,
         field: 'auteur',
         renderHeader: () => (
           <Tooltip title='Auteur'>
@@ -309,7 +387,7 @@ const ReglementList = () => {
         }
       },
       {
-        width: 200,
+        width: 100,
         sortable: false,
         field: 'actions',
         renderHeader: () => (

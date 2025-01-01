@@ -7,6 +7,8 @@ export default class Facture extends MainModel {
   client: Client | string
   taxe: number
   nbproduit: string
+  mtrecu: string
+  relicat: string
   totalfacture: string
   margeBene: string
   statut: string
@@ -25,6 +27,8 @@ export default class Facture extends MainModel {
     taxe = 0,
     nbproduit = '',
     totalfacture = '',
+    mtrecu = '',
+    relicat = '',
     margeBene = '',
     statut = ''
   ) {
@@ -37,6 +41,8 @@ export default class Facture extends MainModel {
     this.nbproduit = nbproduit
     this.totalfacture = totalfacture
     this.margeBene = margeBene
+    this.mtrecu = mtrecu
+    this.relicat = relicat
     this.statut = statut
   }
 }

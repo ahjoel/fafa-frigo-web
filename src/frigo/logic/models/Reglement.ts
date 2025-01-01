@@ -4,6 +4,8 @@ export default class Reglement extends MainModel {
   firstname: string
   lastname: string
   codeFacture: string
+  mtrecu: string
+  relicat: string
   totalFacture: string
   client: string
 
@@ -18,6 +20,8 @@ export default class Reglement extends MainModel {
     firstname = '',
     lastname = '',
     codeFacture = '',
+    mtrecu = '',
+    relicat = '',
     totalFacture = '',
     client = ''
   ) {
@@ -26,6 +30,8 @@ export default class Reglement extends MainModel {
     this.firstname = firstname
     this.lastname = lastname
     this.codeFacture = codeFacture
+    this.mtrecu = mtrecu
+    this.relicat = relicat
     this.totalFacture = totalFacture
     this.client = client
   }
