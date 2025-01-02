@@ -336,8 +336,9 @@ const EntreeR1List = () => {
     // console.log('data to save :::', entreeR1Dispo);
     const stockMinimal = Number(entreeR1Dispo.stockMinimal)
     const stockDispo = Number(entreeR1Dispo.st_dispo)
+    const prixVentePdt = Number(entreeR1Dispo.pv)
 
-    if (stockDispo >= stockMinimal && stockDispo > 0) {
+    if (prixVentePdt > 0 && stockDispo >= stockMinimal && stockDispo > 0) {
       const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
 
       // Créer un nouvel objet pour le produit à ajouter au panier
@@ -374,7 +375,7 @@ const EntreeR1List = () => {
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
-      setMessage('Le stock disponible est insuffisant pour créer une facture')
+      setMessage('Le stock disponible est insuffisant ou le prix de vente est non défini')
     }
   }
 
