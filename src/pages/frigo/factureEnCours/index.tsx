@@ -189,19 +189,36 @@ const FactureEnCours = () => {
 
     // Si element trouvé, alors met à jour la quantité en controlant le stock dispo pour ce produit
     // L'augmentation de qte ne doit pas dépasser la qte dispo pour le produit
+    // if (existingProductIndex !== -1) {
+    //   if (cartProductArray[existingProductIndex].quantity < row.stockDispo) {
+    //     cartProductArray[existingProductIndex].quantity += 0.05 * 1.0
+    //     localStorage.setItem('cart1', JSON.stringify(cartProductArray))
+    //   } else {
+    //     setOpenNotification(true)
+    //     setTypeMessage('error')
+    //     setMessage('Stock disponible insuffisant')
+    //   }
+    // } else {
+    //   setOpenNotification(true)
+    //   setTypeMessage('error')
+    //   setMessage('Une erreur est survenue')
+    // }
     if (existingProductIndex !== -1) {
-      if (cartProductArray[existingProductIndex].quantity < row.stockDispo) {
-        cartProductArray[existingProductIndex].quantity += 0.25
-        localStorage.setItem('cart1', JSON.stringify(cartProductArray))
+      const currentQuantity = cartProductArray[existingProductIndex].quantity;
+      const newQuantity = currentQuantity + 0.05;
+    
+      if (newQuantity <= row.stockDispo) {
+        cartProductArray[existingProductIndex].quantity = parseFloat(newQuantity.toFixed(2));
+        localStorage.setItem('cart1', JSON.stringify(cartProductArray));
       } else {
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage('Stock disponible insuffisant')
+        setOpenNotification(true);
+        setTypeMessage('error');
+        setMessage('Stock disponible insuffisant');
       }
     } else {
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
+      setOpenNotification(true);
+      setTypeMessage('error');
+      setMessage('Une erreur est survenue');
     }
     refresh()
   }
@@ -219,14 +236,21 @@ const FactureEnCours = () => {
     )
 
     if (existingProductIndex !== -1) {
-      if (cartProductArray[existingProductIndex].quantity > 0.25) {
-        cartProductArray[existingProductIndex].quantity -= 0.25
+      const currentQuantity = cartProductArray[existingProductIndex].quantity;
+      const newQuantity = currentQuantity - 0.05;
+    
+      if (newQuantity >= 0.05) {
+        cartProductArray[existingProductIndex].quantity = parseFloat(newQuantity.toFixed(2));
+        localStorage.setItem('cart1', JSON.stringify(cartProductArray));
+      } else {
+        setOpenNotification(true);
+        setTypeMessage('error');
+        setMessage('Quantité incorrecte');
       }
-      localStorage.setItem('cart1', JSON.stringify(cartProductArray))
     } else {
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
+      setOpenNotification(true);
+      setTypeMessage('error');
+      setMessage('Une erreur est survenue');
     }
     refresh()
   }
