@@ -382,6 +382,13 @@ const UserList = () => {
     toggleAddUserDrawer()
   }
 
+  // const handleExportDB = () => {
+  //   // Redirige vers l'endpoint backend
+  //   console.log('test');
+    
+  //   window.location.href = 'http://localhost:5002/export-db';
+  // };
+
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>

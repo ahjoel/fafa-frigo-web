@@ -5,12 +5,13 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 interface TableHeaderProps {
   value: string
   onReload: () => void
+  onExport: () => void
   handleFilter: (val: string) => void
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilter, value, onReload } = props
+  const { handleFilter, value, onReload, onExport } = props
 
   return (
     <Box
@@ -36,7 +37,7 @@ const TableHeader = (props: TableHeaderProps) => {
       />
       <Box sx={{ display: 'flex', alignItems: 'right' }}>
         <Button
-          sx={{ marginLeft: '5px' }}
+          sx={{ marginLeft: '5px', marginRight: '5px' }}
           size='small'
           variant='contained'
           onClick={() => {
@@ -44,6 +45,16 @@ const TableHeader = (props: TableHeaderProps) => {
           }}
         >
           <AutorenewIcon />
+        </Button>
+        <Button
+          sx={{ marginLeft: '5px' }}
+          size='small'
+          variant='contained'
+          onClick={() => {
+            onExport()
+          }}
+        >
+          Exporter PDF
         </Button>
       </Box>
     </Box>

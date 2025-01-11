@@ -25,6 +25,7 @@ import ReglementService from 'src/frigo/logic/services/ReglementService'
 import TableHeader from 'src/frigo/views/reglements/list/TableHeader'
 import { TextField } from '@mui/material'
 import { formatDateEnAnglais } from 'src/frigo/logic/utils/constant'
+import { generatePdfReglement } from 'src/frigo/views/pdfMake/Reglement'
 
 interface CellType {
   row: Reglement
@@ -511,6 +512,24 @@ const ReglementList = () => {
 
   };
 
+  const handleExportToPDF = async () => {
+    try {
+      if (reglements.length > 0) {
+        generatePdfReglement(reglements as never[], 'Situation - Liste_Des_Reglements');
+      }else{
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage("Aucune donnée.")
+      }
+
+    } catch (error) {
+      console.error('Error exporting data to PDF', error);
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage("Une erreur est survenue lors de l'exportation en PDF.")
+    }
+  };
+
 
   return (
     <Grid container spacing={6.5}>
@@ -565,9 +584,17 @@ const ReglementList = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleSearchReglement()}
-                sx={{ height: 40 }}
+                sx={{ height: 40, marginRight: 5 }}
               >
                 Rechercher
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleExportToPDF()}
+                sx={{ height: 40 }}
+              >
+                Exporter PDF
               </Button>
             </Box>
           </Box>

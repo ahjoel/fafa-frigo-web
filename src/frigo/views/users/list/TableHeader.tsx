@@ -6,6 +6,7 @@ import { TextField } from '@mui/material'
 interface TableHeaderProps {
   value: string
   toggle: () => void
+  // expor: () => void
   handleFilter: (val: string) => void
 }
 
@@ -40,10 +41,14 @@ const TableHeader = (props: TableHeaderProps) => {
 
       {profile === "ADMINISTRATEUR" && (
         <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-          <Button onClick={toggle} variant='contained' sx={{ '& svg': { mr: 2 }, '&:hover': { backgroundColor: '#2a3645' } }} size='small'>
+          <Button onClick={toggle} variant='contained' sx={{ '& svg': { mr: 2 }, '&:hover': { backgroundColor: '#2a3645' }, marginRight: 5 }} size='small'>
             <span style={{ marginRight: '0.1rem' }}>Ajouter un utilisateur</span>
             <Icon fontSize='1.5rem' icon='tabler:plus' />
           </Button>
+          {/* <Button onClick={expor} variant='contained' sx={{ '& svg': { mr: 2 }, '&:hover': { backgroundColor: '#2a3645' } }} size='small'>
+            <span style={{ marginRight: '0.1rem' }}>Exporter Database</span>
+            <Icon fontSize='1.5rem' icon='tabler:download' />
+          </Button> */}
         </Box>
       )}
     </Box>

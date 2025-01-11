@@ -13,6 +13,7 @@ import Icon from 'src/@core/components/icon'
 import TableHeader from 'src/frigo/views/entreeR1Dispo/list/TableHeader'
 import EntreeR1Service from 'src/frigo/logic/services/EntreeService'
 import EntreeR1Dispo from 'src/frigo/logic/models/EntreeR1Dispo'
+import { generatePdfDispo } from 'src/frigo/views/pdfMake/StockDispo'
 
 interface CellType {
   row: EntreeR1Dispo
@@ -379,6 +380,24 @@ const EntreeR1List = () => {
     }
   }
 
+  const handleExportToPDF = async () => {
+    try {
+      if (entreesR1Dispo.length > 0) {
+        generatePdfDispo(entreesR1Dispo as never[], 'Situation - Liste_Des_Produits_Dispo');
+      } else {
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage("Aucune donnée.")
+      }
+
+    } catch (error) {
+      console.error('Error exporting data to PDF', error);
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage("Une erreur est survenue lors de l'exportation en PDF.")
+    }
+  };
+
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
@@ -390,6 +409,7 @@ const EntreeR1List = () => {
               setValue('')
               handleChange()
             }}
+            onExport={() => {handleExportToPDF()}}
           />
 
           <DataGrid

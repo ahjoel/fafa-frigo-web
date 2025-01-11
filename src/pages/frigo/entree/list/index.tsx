@@ -29,6 +29,7 @@ import Fournisseur from "src/frigo/logic/models/Fournisseur";
 import FournisseurService from "src/frigo/logic/services/FournisseurService";
 import { TextField } from "@mui/material";
 import { formatDateEnAnglais } from "src/frigo/logic/utils/constant";
+import { generatePdfEntree } from "src/frigo/views/pdfMake/Entree";
 
 interface CellType {
   row: Entree;
@@ -637,6 +638,24 @@ const EntreeList = () => {
 
   };
 
+    const handleExportToPDF = async () => {
+      try {
+        if (entreesR1.length > 0) {
+          generatePdfEntree(entreesR1 as never[], 'Situation - Liste_Des_Entrees');
+        }else{
+          setOpenNotification(true);
+          setTypeMessage("error");
+          setMessage("Aucune donnée.")
+        }
+  
+      } catch (error) {
+        console.error('Error exporting data to PDF', error);
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage("Une erreur est survenue lors de l'exportation en PDF.")
+      }
+    };
+
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
@@ -679,9 +698,17 @@ const EntreeList = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleSearchEntree()}
-                sx={{ height: 40 }}
+                sx={{ height: 40, marginRight: 5 }}
               >
                 Rechercher
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleExportToPDF()}
+                sx={{ height: 40 }}
+              >
+                Exporter PDF
               </Button>
             </Box>
           </Box>
