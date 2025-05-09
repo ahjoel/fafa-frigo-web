@@ -2,7 +2,7 @@ import Fournisseur from './Fournisseur'
 import MainModel from './MainModel'
 import Produit from './Produit'
 
-export default class Entree extends MainModel {
+export default class Inventaire extends MainModel {
   code: string
   produit: Produit | string
   produitId: number
@@ -11,9 +11,9 @@ export default class Entree extends MainModel {
   fournisseur: Fournisseur | string
   fournisseurId: number
   stock: string
-  types: string
   qte: number
   pa: number
+  types: string
 
   constructor(
     id = -1,
@@ -28,10 +28,10 @@ export default class Entree extends MainModel {
     produitId = 0,
     model = '',
     mesure = '',
-    types = '',
     fournisseur = new Fournisseur(),
     fournisseurId = 0,
     stock = '',
+    types = '',
     qte = 0,
     pa = 0
   ) {

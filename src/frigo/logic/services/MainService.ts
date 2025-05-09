@@ -270,6 +270,30 @@ export default class MainService {
     })
   }
 
+  updateEntreeInventaire(object: any, id: number) {
+    // console.log('object :: ', object)
+
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${this.url}/add/update`, object, {
+          headers: {
+            ...getHeadersInformation()
+          }
+        })
+        .then(response => {
+          console.log(id)
+
+          // console.log(response.data.data)
+          resolve(response.data.data)
+        })
+        .catch(error => {
+          this.errorManagement(error)
+          reject(error)
+          resolve(false)
+        })
+    })
+  }
+
   updateEntreeRC(object: any, id: number) {
     // console.log('object :: ', object)
 
@@ -660,6 +684,39 @@ export default class MainService {
 
     try {
       const response = await axios.post(`${this.url}`, object, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async createEntreeInventaire(object: any) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: []
+    }
+
+    try {
+      const response = await axios.post(`${this.url}/add`, object, {
         headers: {
           ...getHeadersInformation()
         }
@@ -1796,6 +1853,40 @@ export default class MainService {
         result.success = true
         result.code = response.data.status
         result.data = response.data.data.mouvementsEntree
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listInventairs() {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.mouvementsI
       } else {
         result.description = response.data.description
       }
